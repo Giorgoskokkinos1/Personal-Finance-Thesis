@@ -44,6 +44,19 @@ app.get('/api/transactions', (req, res) => {
   res.json(transactions);
 });
 
+// Get a single transaction by id
+app.get('/api/transactions/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10); // id from URL as number
+
+  const transaction = transactions.find(t => t.id === id);
+
+  if (!transaction) {
+    return res.status(404).json({ error: 'Transaction not found' });
+  }
+
+  res.json(transaction);
+});
+
 // Create a new transaction
 app.post('/api/transactions', (req, res) => {
   const { date, type, category, amount, description } = req.body;
@@ -73,6 +86,64 @@ app.post('/api/transactions', (req, res) => {
   transactions.push(newTransaction);
 
   res.status(201).json(newTransaction);
+});
+
+// Update an existing transaction by id
+app.put('/api/transactions/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { date, type, category, amount, description } = req.body;
+
+  const transaction = transactions.find(t => t.id === id);
+
+  if (!transaction) {
+    return res.status(404).json({ error: 'Transaction not found' });
+  }
+
+  // Basic validation (same rules as POST)
+  if (!date || !type || !category || !amount) {
+    return res.status(400).json({
+      error: 'date, type, category and amount are required'
+    });
+  }
+
+  if (type !== 'EXPENSE' && type !== 'INCOME') {
+    return res.status(400).json({
+      error: 'type must be EXPENSE or INCOME'
+    });
+  }
+
+  // Update fields
+  transaction.date = date;
+  transaction.type = type;
+  transaction.category = category;
+  transaction.amount = amount;
+  transaction.description = description || '';
+
+  res.json({
+    message: 'Transaction updated',
+    transaction
+  });
+});
+
+// Delete a transaction by id
+app.delete('/api/transactions/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+
+  const index = transactions.findIndex(t => t.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Transaction not found' });
+  }
+
+  const deleted = transactions[index];
+
+  // Remove the item from the array
+  transactions.splice(index, 1);
+
+  res.json({
+    message: 'Transaction deleted',
+    deleted
+  });
 });
 
 // Port from .env or default 5000
