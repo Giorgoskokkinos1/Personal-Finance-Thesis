@@ -146,6 +146,68 @@ app.delete('/api/transactions/:id', (req, res) => {
   });
 });
 
+// --------- SUMMARY ENDPOINTS ---------
+
+// Overview summary: totals and balance
+app.get('/api/summary/overview', (req, res) => {
+  let totalIncome = 0;
+  let totalExpenses = 0;
+  let incomeCount = 0;
+  let expenseCount = 0;
+
+  transactions.forEach(t => {
+    if (t.type === 'INCOME') {
+      totalIncome += t.amount;
+      incomeCount++;
+    } else if (t.type === 'EXPENSE') {
+      totalExpenses += t.amount;
+      expenseCount++;
+    }
+  });
+
+  const balance = totalIncome - totalExpenses;
+
+  res.json({
+    totalIncome,
+    totalExpenses,
+    balance,
+    incomeCount,
+    expenseCount
+  });
+});
+
+// Summary by category
+app.get('/api/summary/by-category', (req, res) => {
+  const categoryMap = {};
+
+  transactions.forEach(t => {
+    const cat = t.category || 'Uncategorized';
+
+    if (!categoryMap[cat]) {
+      categoryMap[cat] = {
+        category: cat,
+        totalIncome: 0,
+        totalExpenses: 0
+      };
+    }
+
+    if (t.type === 'INCOME') {
+      categoryMap[cat].totalIncome += t.amount;
+    } else if (t.type === 'EXPENSE') {
+      categoryMap[cat].totalExpenses += t.amount;
+    }
+  });
+
+  const result = Object.values(categoryMap).map(item => ({
+    ...item,
+    net: item.totalIncome - item.totalExpenses
+  }));
+
+  res.json(result);
+});
+
+// -------------------------------------
+
 // Port from .env or default 5000
 const PORT = process.env.PORT || 5000;
 
