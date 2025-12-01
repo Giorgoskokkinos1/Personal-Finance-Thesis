@@ -1,0 +1,32 @@
+### Create new transaction
+POST http://localhost:5000/api/transactions
+Content-Type: application/json
+
+{
+  "date": "2025-12-01",
+  "type": "INCOME",
+  "category": "Salary",
+  "amount": 1500,
+  "description": "December payment"
+}
+
+### Get all transactions
+GET http://localhost:5000/api/transactions
+
+### Create new expense
+POST http://localhost:5000/api/transactions
+Content-Type: application/json
+
+{
+  "date": "2025-12-02",
+  "type": "EXPENSE",
+  "category": "Groceries",
+  "amount": 85.50,
+  "description": "Weekly supermarket run"
+}
+
+### Summary Overview
+GET http://localhost:5000/api/summary/overview
+
+### Summary by Category
+GET http://localhost:5000/api/summary/by-category
