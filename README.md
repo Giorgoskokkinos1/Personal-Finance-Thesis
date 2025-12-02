@@ -30,3 +30,28 @@ It helps users record income and expenses, visualize their spending, and analyze
 - Organized codebase: `/frontend` and `/api` folders for clean separation
 
 
+
+
+
+## 🎓 About This Project
+This web app was developed as part of my undergraduate thesis, focusing on the implementation of a complete personal finance management system.
+
+The project explores how users can track, analyze, and visualize their spending habits using a modern web architecture:
+- **Backend:** Node.js (Express) with MySQL for structured data storage  
+- **Frontend:** React.js with Chart.js for real-time visual analytics  
+- **Goal:** To demonstrate data-driven financial awareness through interactive design
+
+Future improvements include:
+- Authentication and user-specific data
+- CSV import/export
+- Deployment to cloud hosting (Render/Vercel)
+- Predictive analytics and AI-driven insights
+---
+
+## 📫 Contact
+**Developer:** Giorgos Kokkinos  
+📧 Email: georgioskokkinos97@gmail.com
+💻 GitHub: [Giorgoskokkinos1](https://github.com/Giorgoskokkinos1)
+
+
+
