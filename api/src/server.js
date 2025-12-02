@@ -1,15 +1,21 @@
+// Load environment variables
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-const db = require('../db'); // connects to MySQL
+const db = require('../db'); // Database connection file
 
 const app = express();
 
-// -------------------- MIDDLEWARES --------------------
-app.use(cors());
-app.use(express.json());
+// -------------------------------------------------------
+// Middleware setup
+// -------------------------------------------------------
+app.use(cors()); // Allow frontend requests
+app.use(express.json()); // Parse incoming JSON requests
 
-// -------------------- HEALTH CHECK --------------------
+// -------------------------------------------------------
+// Health check endpoint
+// -------------------------------------------------------
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -18,7 +24,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// -------------------- TRANSACTIONS --------------------
+// -------------------------------------------------------
+// Transaction endpoints
+// -------------------------------------------------------
 
 // Get all transactions
 app.get('/api/transactions', async (req, res) => {
@@ -26,12 +34,12 @@ app.get('/api/transactions', async (req, res) => {
     const [rows] = await db.query('SELECT * FROM transactions ORDER BY date DESC');
     res.json(rows);
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching transactions:', err);
     res.status(500).json({ error: 'Database query failed' });
   }
 });
 
-// Get one transaction by ID
+// Get a single transaction by ID
 app.get('/api/transactions/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   try {
@@ -41,7 +49,7 @@ app.get('/api/transactions/:id', async (req, res) => {
     }
     res.json(rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching transaction by ID:', err);
     res.status(500).json({ error: 'Database query failed' });
   }
 });
@@ -75,12 +83,47 @@ app.post('/api/transactions', async (req, res) => {
 
     res.status(201).json(newTransaction);
   } catch (err) {
-    console.error(err);
+    console.error('Error inserting transaction:', err);
     res.status(500).json({ error: 'Database insert failed' });
   }
 });
 
-// Update a transaction
+// Bulk insert (CSV upload)
+app.post('/api/transactions/bulk', async (req, res) => {
+  const newTransactions = req.body;
+
+  if (!Array.isArray(newTransactions) || newTransactions.length === 0) {
+    return res.status(400).json({ error: 'Request body must be an array of transactions' });
+  }
+
+  const invalid = newTransactions.find(t => !t.date || !t.type || !t.category || !t.amount);
+  if (invalid) {
+    return res.status(400).json({ error: 'Each transaction must include date, type, category, and amount' });
+  }
+
+  try {
+    const values = newTransactions.map(t => [
+      t.date,
+      t.type.toUpperCase() === 'INCOME' ? 'INCOME' : 'EXPENSE',
+      t.category,
+      parseFloat(t.amount),
+      t.description || ''
+    ]);
+
+    await db.query(
+      'INSERT INTO transactions (date, type, category, amount, description) VALUES ?',
+      [values]
+    );
+
+    console.log(`Bulk upload: ${newTransactions.length} transactions added.`);
+    res.status(201).json({ message: `Inserted ${newTransactions.length} transactions.` });
+  } catch (err) {
+    console.error('Error during bulk insert:', err);
+    res.status(500).json({ error: 'Database bulk insert failed' });
+  }
+});
+
+// Update an existing transaction
 app.put('/api/transactions/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const { date, type, category, amount, description } = req.body;
@@ -101,7 +144,7 @@ app.put('/api/transactions/:id', async (req, res) => {
 
     res.json({ message: 'Transaction updated' });
   } catch (err) {
-    console.error(err);
+    console.error('Error updating transaction:', err);
     res.status(500).json({ error: 'Database update failed' });
   }
 });
@@ -116,14 +159,16 @@ app.delete('/api/transactions/:id', async (req, res) => {
     }
     res.json({ message: 'Transaction deleted' });
   } catch (err) {
-    console.error(err);
+    console.error('Error deleting transaction:', err);
     res.status(500).json({ error: 'Database delete failed' });
   }
 });
 
-// -------------------- SUMMARY ENDPOINTS --------------------
+// -------------------------------------------------------
+// Summary endpoints
+// -------------------------------------------------------
 
-// Overview summary: totals and balance
+// Overview: totals and balance
 app.get('/api/summary/overview', async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -144,12 +189,12 @@ app.get('/api/summary/overview', async (req, res) => {
       expenseCount: expenseCount || 0
     });
   } catch (err) {
-    console.error(err);
+    console.error('Error generating overview summary:', err);
     res.status(500).json({ error: 'Database summary failed' });
   }
 });
 
-// Summary by category
+// Summary grouped by category
 app.get('/api/summary/by-category', async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -168,13 +213,16 @@ app.get('/api/summary/by-category', async (req, res) => {
 
     res.json(result);
   } catch (err) {
-    console.error(err);
+    console.error('Error generating summary by category:', err);
     res.status(500).json({ error: 'Database summary by category failed' });
   }
 });
 
-// -------------------- START SERVER --------------------
+// -------------------------------------------------------
+// Start server
+// -------------------------------------------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`✅ API server listening on port ${PORT}`);
+  console.log(`API server running on port ${PORT}`);
 });
+
