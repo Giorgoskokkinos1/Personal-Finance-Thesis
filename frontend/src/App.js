@@ -4,17 +4,15 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import Papa from "papaparse";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "./App.css";
 
-// Page components
 import Dashboard from "./pages/Dashboard";
 import TransactionsPage from "./pages/Transactions";
 import ChartsPage from "./pages/Charts";
 import UploadPage from "./pages/Upload";
 
 function App() {
-  // --------------------------
-  // Application State
-  // --------------------------
   const [transactions, setTransactions] = useState([]);
 
   const [newTransaction, setNewTransaction] = useState({
@@ -32,9 +30,27 @@ function App() {
     search: "",
   });
 
-  // --------------------------
-  // Fetch Transactions on Load
-  // --------------------------
+  // User-configurable monthly budget (saved in localStorage)
+  const [monthlyBudget, setMonthlyBudget] = useState(() => {
+    if (typeof window === "undefined") return 1500;
+    const saved = window.localStorage.getItem("monthlyBudget");
+    if (!saved) return 1500;
+    const num = Number(saved);
+    return Number.isNaN(num) ? 1500 : num;
+  });
+
+  useEffect(() => {
+    // Save budget to localStorage whenever it changes
+    try {
+      window.localStorage.setItem("monthlyBudget", monthlyBudget.toString());
+    } catch (err) {
+      console.error("Could not save budget to localStorage:", err);
+    }
+  }, [monthlyBudget]);
+
+  // -----------------------------------
+  // Load transactions on startup
+  // -----------------------------------
   useEffect(() => {
     fetchTransactions();
   }, []);
@@ -46,9 +62,9 @@ function App() {
       .catch((err) => console.error("Error fetching:", err));
   };
 
-  // --------------------------
-  // Transaction Input Handlers
-  // --------------------------
+  // -----------------------------------
+  // Add transaction
+  // -----------------------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewTransaction((prev) => ({ ...prev, [name]: value }));
@@ -72,9 +88,41 @@ function App() {
       .catch((err) => console.error("Add error:", err));
   };
 
-  // --------------------------
-  // CSV Upload
-  // --------------------------
+  // -----------------------------------
+  // Delete transaction
+  // -----------------------------------
+  const handleDeleteTransaction = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this transaction?"
+    );
+    if (!confirmed) return;
+
+    axios
+      .delete(`http://localhost:5000/api/transactions/${id}`)
+      .then(() => {
+        fetchTransactions();
+      })
+      .catch((err) => console.error("Delete error:", err));
+  };
+
+  // -----------------------------------
+  // Update transaction (EDIT)
+  // -----------------------------------
+  const handleUpdateTransaction = (updatedTx) => {
+    axios
+      .put(
+        `http://localhost:5000/api/transactions/${updatedTx.id}`,
+        updatedTx
+      )
+      .then(() => {
+        fetchTransactions();
+      })
+      .catch((err) => console.error("Update error:", err));
+  };
+
+  // -----------------------------------
+  // CSV upload
+  // -----------------------------------
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -99,11 +147,11 @@ function App() {
     });
   };
 
-  // --------------------------
-  // Filter Logic
-  // --------------------------
+  // -----------------------------------
+  // Filters
+  // -----------------------------------
   const filteredTransactions = transactions.filter((t) => {
-    const month = t.date.slice(5, 7);
+    const month = t.date ? t.date.slice(5, 7) : "";
 
     const matchMonth = filter.month === "ALL" || month === filter.month;
     const matchType = filter.type === "ALL" || t.type === filter.type;
@@ -117,9 +165,9 @@ function App() {
     return matchMonth && matchType && matchCategory && matchSearch;
   });
 
-  // --------------------------
-  // Computed Summary Values
-  // --------------------------
+  // -----------------------------------
+  // Summary values (for filtered list)
+  // -----------------------------------
   const totalIncome = filteredTransactions
     .filter((t) => t.type === "INCOME")
     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
@@ -128,9 +176,31 @@ function App() {
     .filter((t) => t.type === "EXPENSE")
     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
 
-  const balance = (totalIncome - totalExpenses).toFixed(2);
+  const balanceNumber = totalIncome - totalExpenses;
+  const balance = balanceNumber.toFixed(2);
 
-  // Category chart data
+  // -----------------------------------
+  // Current month expenses (for budget feature)
+  // -----------------------------------
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonthIndex = now.getMonth(); // 0-11
+
+  const currentMonthExpenses = transactions
+    .filter((t) => t.type === "EXPENSE")
+    .filter((t) => {
+      if (!t.date) return false;
+      const d = new Date(t.date);
+      if (Number.isNaN(d.getTime())) return false;
+      return (
+        d.getFullYear() === currentYear && d.getMonth() === currentMonthIndex
+      );
+    })
+    .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+
+  // -----------------------------------
+  // Category data
+  // -----------------------------------
   const expenseCategories = [
     ...new Set(
       filteredTransactions
@@ -145,15 +215,16 @@ function App() {
       .reduce((sum, t) => sum + parseFloat(t.amount), 0)
   );
 
-  // Monthly overview
+  // Monthly data
   const months = [
     ...new Set(
       filteredTransactions.map((t) => {
         const d = new Date(t.date);
+        if (Number.isNaN(d.getTime())) return "Unknown";
         return d.toLocaleString("default", { month: "short", year: "numeric" });
       })
     ),
-  ];
+  ].filter((m) => m !== "Unknown");
 
   const incomeByMonth = months.map((m) =>
     filteredTransactions
@@ -181,106 +252,126 @@ function App() {
       .reduce((sum, t) => sum + parseFloat(t.amount), 0)
   );
 
-  // --------------------------
-  // UI Rendering
-  // --------------------------
+  // -----------------------------------
+  // Render
+  // -----------------------------------
   return (
     <Router>
-      {/* NAVBAR */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
-          <Link className="navbar-brand" to="/">
-            Finance Tracker
-          </Link>
+      <div className="app-root">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark app-navbar">
+          <div className="container">
+            <Link className="navbar-brand fw-semibold" to="/">
+              Finance Tracker
+            </Link>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navMenu"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navMenu"
+              aria-controls="navMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
 
-          <div className="collapse navbar-collapse" id="navMenu">
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">Dashboard</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/transactions">Transactions</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/charts">Charts</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/upload">Upload CSV</Link>
-              </li>
-            </ul>
+            <div className="collapse navbar-collapse" id="navMenu">
+              <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/">
+                    Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/transactions">
+                    Transactions
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/charts">
+                    Charts
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/upload">
+                    Upload CSV
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      {/* PAGE CONTENT */}
-      <div className="container mt-4">
-
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Dashboard
-                totalIncome={totalIncome}
-                totalExpenses={totalExpenses}
-                balance={balance}
+        <main className="app-main">
+          <div className="container">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Dashboard
+                    totalIncome={totalIncome}
+                    totalExpenses={totalExpenses}
+                    balance={balance}
+                    currentMonthExpenses={currentMonthExpenses}
+                    monthlyBudget={monthlyBudget}
+                    setMonthlyBudget={setMonthlyBudget}
+                  />
+                }
               />
-            }
-          />
 
-          <Route
-            path="/transactions"
-            element={
-              <TransactionsPage
-                transactions={transactions}
-                filteredTransactions={filteredTransactions}
-                newTransaction={newTransaction}
-                onChange={handleChange}
-                onSubmit={handleSubmit}
-                filter={filter}
-                setFilter={setFilter}
+              <Route
+                path="/transactions"
+                element={
+                  <TransactionsPage
+                    transactions={transactions}
+                    filteredTransactions={filteredTransactions}
+                    newTransaction={newTransaction}
+                    onChange={handleChange}
+                    onSubmit={handleSubmit}
+                    filter={filter}
+                    setFilter={setFilter}
+                    onDeleteTransaction={handleDeleteTransaction}
+                    onUpdateTransaction={handleUpdateTransaction}
+                    totalIncome={totalIncome}
+                    totalExpenses={totalExpenses}
+                    balance={balance}
+                  />
+                }
               />
-            }
-          />
 
-          <Route
-            path="/charts"
-            element={
-              <ChartsPage
-                totalIncome={totalIncome}
-                totalExpenses={totalExpenses}
-                expenseCategories={expenseCategories}
-                expenseTotals={expenseTotals}
-                months={months}
-                incomeByMonth={incomeByMonth}
-                expensesByMonth={expensesByMonth}
+              <Route
+                path="/charts"
+                element={
+                  <ChartsPage
+                    totalIncome={totalIncome}
+                    totalExpenses={totalExpenses}
+                    expenseCategories={expenseCategories}
+                    expenseTotals={expenseTotals}
+                    months={months}
+                    incomeByMonth={incomeByMonth}
+                    expensesByMonth={expensesByMonth}
+                  />
+                }
               />
-            }
-          />
 
-          <Route
-            path="/upload"
-            element={<UploadPage onFileUpload={handleFileUpload} />}
-          />
+              <Route
+                path="/upload"
+                element={<UploadPage onFileUpload={handleFileUpload} />}
+              />
 
-          <Route
-            path="*"
-            element={
-              <div className="text-center mt-5">
-                <h2>404 - Page Not Found</h2>
-                <p>This page does not exist.</p>
-              </div>
-            }
-          />
-        </Routes>
+              <Route
+                path="*"
+                element={
+                  <div className="text-center mt-5">
+                    <h2>404 - Page Not Found</h2>
+                    <p>This page does not exist.</p>
+                  </div>
+                }
+              />
+            </Routes>
+          </div>
+        </main>
       </div>
     </Router>
   );

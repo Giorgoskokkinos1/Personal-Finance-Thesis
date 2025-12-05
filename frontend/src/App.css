@@ -1,38 +1,135 @@
-.App {
-  text-align: center;
+/* Global layout */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: radial-gradient(circle at top left, #eef2ff 0, #f4f5f7 40%, #f9fafb 100%);
+  color: #111827;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* Root container used in App.js */
+.app-root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Navbar styling */
+.app-navbar {
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.app-navbar .navbar-brand {
+  letter-spacing: 0.04em;
+  font-size: 1.1rem;
+}
+
+.app-navbar .nav-link {
+  font-size: 0.95rem;
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
+}
+
+.app-navbar .nav-link.active,
+.app-navbar .nav-link:hover {
+  color: #ffffff;
+}
+
+/* Main content */
+.app-main {
+  flex: 1;
+  padding: 2rem 0 3rem;
+}
+
+/* Cards */
+.card {
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.card.shadow-sm {
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Summary metrics on Dashboard */
+.metric-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.metric-subtitle {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* Balance colors */
+.balance-positive {
+  color: #16a34a;
+}
+
+.balance-negative {
+  color: #dc2626;
+}
+
+/* Transaction table */
+.table {
+  font-size: 0.95rem;
+}
+
+.table thead th {
+  background-color: #f3f4f6;
+  border-bottom-width: 1px;
+  font-weight: 600;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9fafb;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.btn-outline-danger {
+  border-width: 1px;
+}
+
+/* Chart containers (used in Charts.js inline style, but we can make it nicer) */
+.chart-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+/* Upload page drag area etc. */
+.upload-helper-text {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .app-main {
+    padding: 1.5rem 0 2rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .metric-value {
+    font-size: 1.5rem;
   }
 }
+
