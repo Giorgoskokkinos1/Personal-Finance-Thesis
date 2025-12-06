@@ -40,7 +40,6 @@ function App() {
   });
 
   useEffect(() => {
-    // Save budget to localStorage whenever it changes
     try {
       window.localStorage.setItem("monthlyBudget", monthlyBudget.toString());
     } catch (err) {
@@ -148,7 +147,7 @@ function App() {
   };
 
   // -----------------------------------
-  // Filters
+  // Filters (for Transactions + Charts)
   // -----------------------------------
   const filteredTransactions = transactions.filter((t) => {
     const month = t.date ? t.date.slice(5, 7) : "";
@@ -180,26 +179,78 @@ function App() {
   const balance = balanceNumber.toFixed(2);
 
   // -----------------------------------
-  // Current month expenses (for budget feature)
+  // Current month totals (for budget card)
   // -----------------------------------
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonthIndex = now.getMonth(); // 0-11
 
-  const currentMonthExpenses = transactions
-    .filter((t) => t.type === "EXPENSE")
-    .filter((t) => {
+  const getMonthTotals = (year, monthIndex) => {
+    const monthTransactions = transactions.filter((t) => {
       if (!t.date) return false;
       const d = new Date(t.date);
       if (Number.isNaN(d.getTime())) return false;
-      return (
-        d.getFullYear() === currentYear && d.getMonth() === currentMonthIndex
-      );
-    })
-    .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+      return d.getFullYear() === year && d.getMonth() === monthIndex;
+    });
+
+    const income = monthTransactions
+      .filter((t) => t.type === "INCOME")
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+
+    const expenses = monthTransactions
+      .filter((t) => t.type === "EXPENSE")
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+
+    return { income, expenses };
+  };
+
+  const { expenses: currentMonthExpenses } = getMonthTotals(
+    currentYear,
+    currentMonthIndex
+  );
+
+  // Percentage of budget used and alert flag
+  const budgetUsagePercent =
+    monthlyBudget > 0 ? (currentMonthExpenses / monthlyBudget) * 100 : 0;
+
+  const hasBudgetAlert =
+    monthlyBudget > 0 && budgetUsagePercent >= 80;
 
   // -----------------------------------
-  // Category data
+  // Months list for Monthly Trend dropdowns
+  // -----------------------------------
+  const monthKeys = [
+    ...new Set(
+      transactions
+        .filter((t) => t.date)
+        .map((t) => {
+          const d = new Date(t.date);
+          if (Number.isNaN(d.getTime())) return null;
+          const key = `${d.getFullYear()}-${String(
+            d.getMonth() + 1
+          ).padStart(2, "0")}`;
+          return key;
+        })
+        .filter(Boolean)
+    ),
+  ];
+
+  const monthsForTrend = monthKeys
+    .map((key) => {
+      const [yearStr, monthStr] = key.split("-");
+      const d = new Date(Number(yearStr), Number(monthStr) - 1, 1);
+      return {
+        key,
+        label: d.toLocaleString("default", {
+          month: "short",
+          year: "numeric",
+        }),
+      };
+    })
+    .sort((a, b) => a.key.localeCompare(b.key));
+
+  // -----------------------------------
+  // Category + monthly data for charts (uses filtered set)
   // -----------------------------------
   const expenseCategories = [
     ...new Set(
@@ -215,7 +266,6 @@ function App() {
       .reduce((sum, t) => sum + parseFloat(t.amount), 0)
   );
 
-  // Monthly data
   const months = [
     ...new Set(
       filteredTransactions.map((t) => {
@@ -277,7 +327,7 @@ function App() {
             </button>
 
             <div className="collapse navbar-collapse" id="navMenu">
-              <ul className="navbar-nav ms-auto">
+              <ul className="navbar-nav me-auto">
                 <li className="nav-item">
                   <Link className="nav-link" to="/">
                     Dashboard
@@ -299,6 +349,39 @@ function App() {
                   </Link>
                 </li>
               </ul>
+
+              {/* Bell on the right, visible on every page */}
+              <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                  <Link
+                    to="/"
+                    className="nav-link nav-bell-link"
+                    title="View budget alerts"
+                    onClick={() => {
+                      setTimeout(() => {
+                        const el = document.getElementById(
+                          "dashboard-insights"
+                        );
+                        if (el) {
+                          el.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        }
+                      }, 100);
+                    }}
+                  >
+                    <span
+                      className={
+                        "nav-bell" + (hasBudgetAlert ? " nav-bell-alert" : "")
+                      }
+                    >
+                      &#128276;
+                    </span>
+                    {hasBudgetAlert && <span className="nav-bell-badge" />}
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
         </nav>
@@ -316,6 +399,8 @@ function App() {
                     currentMonthExpenses={currentMonthExpenses}
                     monthlyBudget={monthlyBudget}
                     setMonthlyBudget={setMonthlyBudget}
+                    transactions={transactions}
+                    monthsForTrend={monthsForTrend}
                   />
                 }
               />
