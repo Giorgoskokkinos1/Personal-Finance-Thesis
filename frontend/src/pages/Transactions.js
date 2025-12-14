@@ -297,6 +297,30 @@ function TransactionsPage({
                   onChange={onChange}
                 />
               </div>
+
+              {/* Repeat monthly */}
+              <div className="col-md-6">
+                <label className="form-label">
+                  Repeat monthly (subscriptions)
+                </label>
+                <select
+                  className="form-select"
+                  name="repeatMonths"
+                  value={newTransaction.repeatMonths || "0"}
+                  onChange={onChange}
+                >
+                  <option value="0">Do not repeat</option>
+                  <option value="3">Every month for 3 months</option>
+                  <option value="6">Every month for 6 months</option>
+                  <option value="12">Every month for 12 months</option>
+                </select>
+              </div>
+              <div className="col-md-6 d-flex align-items-end">
+                <p className="text-muted mb-0" style={{ fontSize: "0.85rem" }}>
+                  Use this for things like Spotify, Netflix, gym, phone plan.
+                  The app will create one transaction per month.
+                </p>
+              </div>
             </div>
 
             <button type="submit" className="btn btn-primary mt-3">

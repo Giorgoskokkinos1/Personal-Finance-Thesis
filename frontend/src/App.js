@@ -21,6 +21,7 @@ function App() {
     category: "",
     amount: "",
     description: "",
+    repeatMonths: "0", // how many months to repeat (as string from select)
   });
 
   const [filter, setFilter] = useState({
@@ -62,7 +63,7 @@ function App() {
   };
 
   // -----------------------------------
-  // Add transaction
+  // Add transaction (single or recurring)
   // -----------------------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,19 +73,73 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const repeatMonths = parseInt(newTransaction.repeatMonths || "0", 10);
+
+    // Helper to add months to a yyyy-mm-dd date string
+    const addMonthsToDate = (dateString, monthsToAdd) => {
+      const d = new Date(dateString);
+      if (Number.isNaN(d.getTime())) {
+        return dateString;
+      }
+      d.setMonth(d.getMonth() + monthsToAdd);
+      return d.toISOString().slice(0, 10); // yyyy-mm-dd
+    };
+
+    // Reset function to keep things tidy
+    const resetForm = () => {
+      setNewTransaction({
+        date: "",
+        type: "INCOME",
+        category: "",
+        amount: "",
+        description: "",
+        repeatMonths: "0",
+      });
+    };
+
+    // Case 1: no repeat -> single POST
+    if (!repeatMonths || repeatMonths <= 0) {
+      const payload = {
+        date: newTransaction.date,
+        type: newTransaction.type,
+        category: newTransaction.category,
+        amount: parseFloat(newTransaction.amount),
+        description: newTransaction.description || "",
+      };
+
+      axios
+        .post("http://localhost:5000/api/transactions", payload)
+        .then(() => {
+          fetchTransactions();
+          resetForm();
+        })
+        .catch((err) => console.error("Add error:", err));
+      return;
+    }
+
+    // Case 2: repeat monthly -> build an array and use /bulk
+    const baseDate = newTransaction.date;
+    const rows = [];
+
+    for (let i = 0; i < repeatMonths; i += 1) {
+      const newDate = addMonthsToDate(baseDate, i);
+
+      rows.push({
+        date: newDate,
+        type: newTransaction.type,
+        category: newTransaction.category,
+        amount: parseFloat(newTransaction.amount),
+        description: newTransaction.description || "",
+      });
+    }
+
     axios
-      .post("http://localhost:5000/api/transactions", newTransaction)
+      .post("http://localhost:5000/api/transactions/bulk", rows)
       .then(() => {
         fetchTransactions();
-        setNewTransaction({
-          date: "",
-          type: "INCOME",
-          category: "",
-          amount: "",
-          description: "",
-        });
+        resetForm();
       })
-      .catch((err) => console.error("Add error:", err));
+      .catch((err) => console.error("Add error (bulk):", err));
   };
 
   // -----------------------------------
@@ -213,8 +268,7 @@ function App() {
   const budgetUsagePercent =
     monthlyBudget > 0 ? (currentMonthExpenses / monthlyBudget) * 100 : 0;
 
-  const hasBudgetAlert =
-    monthlyBudget > 0 && budgetUsagePercent >= 80;
+  const hasBudgetAlert = monthlyBudget > 0 && budgetUsagePercent >= 80;
 
   // -----------------------------------
   // Months list for Monthly Trend dropdowns
@@ -271,7 +325,10 @@ function App() {
       filteredTransactions.map((t) => {
         const d = new Date(t.date);
         if (Number.isNaN(d.getTime())) return "Unknown";
-        return d.toLocaleString("default", { month: "short", year: "numeric" });
+        return d.toLocaleString("default", {
+          month: "short",
+          year: "numeric",
+        });
       })
     ),
   ].filter((m) => m !== "Unknown");

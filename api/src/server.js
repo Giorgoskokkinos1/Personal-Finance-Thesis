@@ -1,23 +1,21 @@
-// Load environment variables from the project root
-require("dotenv").config();
+// api/src/server.js
 
 const express = require("express");
 const cors = require("cors");
 
-// db.js is in the project root folder, two levels up from api/src
-const db = require("./db"); // db.js is in the same folder now
-
+// db.js is in the same folder (api/src/db.js)
+const db = require("./db");
 
 const app = express();
 
 // -------------------------------------------------------
-// Middleware setup
+// Middleware
 // -------------------------------------------------------
-app.use(cors());          // Allow frontend requests
-app.use(express.json());  // Parse incoming JSON requests
+app.use(cors());
+app.use(express.json());
 
 // -------------------------------------------------------
-// Health check endpoint
+// Health check
 // -------------------------------------------------------
 app.get("/api/health", (req, res) => {
   res.json({
@@ -47,13 +45,16 @@ app.get("/api/transactions", async (req, res) => {
 // Get a single transaction by ID
 app.get("/api/transactions/:id", async (req, res) => {
   const id = parseInt(req.params.id, 10);
+
   try {
     const [rows] = await db.query("SELECT * FROM transactions WHERE id = ?", [
       id,
     ]);
+
     if (rows.length === 0) {
       return res.status(404).json({ error: "Transaction not found" });
     }
+
     res.json(rows[0]);
   } catch (err) {
     console.error("Error fetching transaction by ID:", err);
@@ -61,7 +62,7 @@ app.get("/api/transactions/:id", async (req, res) => {
   }
 });
 
-// Create a new transaction
+// Create a single transaction
 app.post("/api/transactions", async (req, res) => {
   const { date, type, category, amount, description } = req.body;
 
@@ -99,50 +100,50 @@ app.post("/api/transactions", async (req, res) => {
   }
 });
 
-// Bulk insert (CSV upload)
+// Bulk insert (CSV upload + recurring subscriptions)
 app.post("/api/transactions/bulk", async (req, res) => {
-  const newTransactions = req.body;
-
-  if (!Array.isArray(newTransactions) || newTransactions.length === 0) {
-    return res
-      .status(400)
-      .json({ error: "Request body must be an array of transactions" });
-  }
-
-  const invalid = newTransactions.find(
-    (t) => !t.date || !t.type || !t.category || !t.amount
-  );
-  if (invalid) {
-    return res.status(400).json({
-      error: "Each transaction must include date, type, category, and amount",
-    });
-  }
-
   try {
-    const values = newTransactions.map((t) => [
-      t.date,
-      t.type.toUpperCase() === "INCOME" ? "INCOME" : "EXPENSE",
-      t.category,
-      parseFloat(t.amount),
-      t.description || "",
-    ]);
+    const rows = req.body;
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Request body must be a non-empty array" });
+    }
+
+    const values = rows.map((t) => {
+      if (!t.date || !t.type || !t.category || t.amount == null) {
+        throw new Error(
+          "Each transaction must include date, type, category and amount"
+        );
+      }
+
+      const type =
+        String(t.type).toUpperCase() === "INCOME" ? "INCOME" : "EXPENSE";
+
+      return [
+        t.date,
+        type,
+        t.category,
+        Number(t.amount) || 0,
+        t.description || "",
+      ];
+    });
 
     await db.query(
       "INSERT INTO transactions (date, type, category, amount, description) VALUES ?",
       [values]
     );
 
-    console.log(`Bulk upload: ${newTransactions.length} transactions added.`);
-    res
-      .status(201)
-      .json({ message: `Inserted ${newTransactions.length} transactions.` });
+    console.log(`Bulk insert: ${rows.length} rows added.`);
+    res.status(201).json({ message: `Inserted ${rows.length} transactions.` });
   } catch (err) {
     console.error("Error during bulk insert:", err);
     res.status(500).json({ error: "Database bulk insert failed" });
   }
 });
 
-// Update an existing transaction
+// Update transaction
 app.put("/api/transactions/:id", async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const { date, type, category, amount, description } = req.body;
@@ -170,16 +171,19 @@ app.put("/api/transactions/:id", async (req, res) => {
   }
 });
 
-// Delete a transaction
+// Delete transaction
 app.delete("/api/transactions/:id", async (req, res) => {
   const id = parseInt(req.params.id, 10);
+
   try {
     const [result] = await db.query("DELETE FROM transactions WHERE id = ?", [
       id,
     ]);
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Transaction not found" });
     }
+
     res.json({ message: "Transaction deleted" });
   } catch (err) {
     console.error("Error deleting transaction:", err);
@@ -203,7 +207,8 @@ app.get("/api/summary/overview", async (req, res) => {
       FROM transactions
     `);
 
-  const { totalIncome, totalExpenses, incomeCount, expenseCount } = rows[0];
+    const { totalIncome, totalExpenses, incomeCount, expenseCount } = rows[0];
+
     res.json({
       totalIncome: totalIncome || 0,
       totalExpenses: totalExpenses || 0,
@@ -244,7 +249,8 @@ app.get("/api/summary/by-category", async (req, res) => {
 // -------------------------------------------------------
 // Start server
 // -------------------------------------------------------
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
+
 app.listen(PORT, () => {
   console.log(`API server running on port ${PORT}`);
 });
