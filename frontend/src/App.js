@@ -143,6 +143,9 @@ function App() {
       signedInAt: new Date().toISOString(),
     };
 
+    clearWorkspaceData();
+    setProfileMenuOpen(false);
+    setProfileModalOpen(false);
     setCurrentUser(user);
     setAxiosUserHeader(user.email);
 
@@ -154,6 +157,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    clearWorkspaceData();
     setCurrentUser(null);
     setProfileMenuOpen(false);
     setProfileModalOpen(false);
@@ -167,6 +171,33 @@ function App() {
       ? window.localStorage
       : window.sessionStorage;
     storage.setItem("financeTrackerUser", JSON.stringify(user));
+  };
+
+  const clearWorkspaceData = () => {
+    setTransactions([]);
+    setTargets([]);
+    setCategories([]);
+    setBudgets([]);
+    setFilter({
+      month: "ALL",
+      type: "ALL",
+      category: "ALL",
+      search: "",
+    });
+    setChartRange({
+      from: "",
+      to: "",
+    });
+    setNewTransaction((prev) => ({
+      ...prev,
+      date: "",
+      category: "",
+      amount: "",
+      description: "",
+      targetId: "",
+      smartCategory: null,
+      categoryTouched: false,
+    }));
   };
 
   const openProfileSettings = () => {
@@ -192,7 +223,7 @@ function App() {
     const updatedUser = {
       ...currentUser,
       name: profileForm.name.trim() || "User",
-      email: profileForm.email.trim() || currentUser.email,
+      email: currentUser.email,
     };
     const updatedSettings = {
       currency: profileForm.currency,
@@ -1120,9 +1151,13 @@ function App() {
                       name="email"
                       type="email"
                       value={profileForm.email}
-                      onChange={handleProfileFormChange}
+                      readOnly
                       required
                     />
+                    <div className="form-text identity-helper-text">
+                      Email identifies this demo workspace. Sign out and sign in
+                      with a different email to open a separate account.
+                    </div>
                   </div>
 
                   <div className="row g-3">

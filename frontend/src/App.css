@@ -1905,6 +1905,17 @@ body::after {
   margin: 0.5rem 0 1.5rem;
 }
 
+.account-scope-note {
+  border: 1px solid rgba(20, 184, 166, 0.28);
+  border-radius: 8px;
+  background: rgba(240, 253, 250, 0.82);
+  color: #115e59;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: -0.35rem 0 1.25rem;
+  padding: 0.85rem 0.95rem;
+}
+
 .login-input {
   min-height: 50px;
   background: #ffffff;
@@ -2278,6 +2289,12 @@ button.nav-user-chip {
 .profile-settings-form {
   display: grid;
   gap: 1rem;
+}
+
+.identity-helper-text {
+  color: #64748b;
+  font-size: 0.82rem;
+  margin-top: 0.4rem;
 }
 
 .profile-actions {

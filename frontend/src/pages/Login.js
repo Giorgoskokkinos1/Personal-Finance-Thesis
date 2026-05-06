@@ -226,6 +226,10 @@ function LoginPage({ onLogin }) {
               ? "Set up local demo access and enter your finance workspace."
               : "Sign in to open your finance workspace."}
           </p>
+          <div className="account-scope-note">
+            Each email opens a separate demo workspace, so another user starts
+            with their own transactions, categories, goals, and budgets.
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>
