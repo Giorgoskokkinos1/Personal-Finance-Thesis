@@ -11,10 +11,11 @@ require("dotenv").config({
 // console.log("DB_USER from env:", process.env.DB_USER);
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "finance_db",
+  host: process.env.MYSQLHOST || process.env.DB_HOST || "localhost",
+  port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
+  user: process.env.MYSQLUSER || process.env.DB_USER || "root",
+  password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || "",
+  database: process.env.MYSQLDATABASE || process.env.DB_NAME || "finance_db",
 });
 
 const db = pool.promise();

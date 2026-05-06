@@ -1146,7 +1146,7 @@ app.get("/api/summary/by-category", async (req, res) => {
 // -------------------------------------------------------
 // Start server
 // -------------------------------------------------------
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const bootstrapDatabase = async () => {
   await ensureCategoriesTable();

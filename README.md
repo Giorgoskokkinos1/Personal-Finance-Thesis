@@ -1,4 +1,3 @@
-# Personal Finance Thesis
 # Personal Finance Tracker Thesis
 
 A full-stack personal finance management web application developed as part of an undergraduate thesis project.
@@ -19,8 +18,6 @@ Personal finance applications often fail when they require too much manual effor
 - Capable of turning raw transactions into visual insights.
 - Designed as a complete full-stack system with frontend, backend, database, and API layers.
 
-Full-stack personal finance tracking web application developed as part of an undergraduate thesis.
-The system allows users to record income and expenses, categorize spending, set a monthly budget, import/export CSV files, and view dashboard insights through charts.
 The app is organized around the main actions a user needs:
 
 - **Home** - overall financial position and quick insights.
@@ -57,13 +54,11 @@ The authentication layer is still considered demo-level and can be improved late
 
 ## Tech Stack
 
-**Frontend**
 ### Frontend
 
 - React
 - React Router
 - Axios
-- Chart.js / react-chartjs-2
 - Bootstrap 5
 - Chart.js
 - react-chartjs-2
@@ -71,16 +66,13 @@ The authentication layer is still considered demo-level and can be improved late
 - TypeScript utility/component files for chart transformations
 - CSS custom styling in `App.css`
 
-**Backend**
 ### Backend
 
 - Node.js
 - Express
-- MySQL via mysql2
 - MySQL
 - mysql2
 - REST API with JSON responses
-- dotenv and CORS
 - dotenv
 - CORS
 
@@ -386,13 +378,6 @@ The most common daily actions are visible directly, while less frequent actions 
 
 ## Project Structure
 
-- `api/` - Express API, database connection, backend package scripts, and REST request examples.
-- `api/src/server.js` - API routes for health checks, transactions, bulk upload, and summaries.
-- `api/src/db.js` - MySQL connection pool configured from environment variables.
-- `frontend/` - React single-page app.
-- `frontend/src/App.js` - main app state, routing, filters, API calls, CSV import, and budget logic.
-- `frontend/src/pages/` - page-level React components for Dashboard, Transactions, Charts, and Upload.
-- `portfolio/` - thesis portfolio document and related notes.
 ```text
 FinTst2/
 ├── api/
@@ -464,17 +449,14 @@ PUT    /api/transactions/:id
 DELETE /api/transactions/:id
 ```
 
-## Local Setup
 ### Categories
 
-### 1. Configure MySQL
 ```text
 GET    /api/categories
 POST   /api/categories
 DELETE /api/categories/:id
 ```
 
-Create a local MySQL database. The app defaults to `finance_db`.
 ### Financial Goals
 
 ```text
@@ -534,24 +516,12 @@ The backend also performs lightweight schema updates, such as:
 - Adding account ownership fields.
 - Creating budget and category uniqueness rules.
 
-USE finance_db;
 ---
 
-CREATE TABLE IF NOT EXISTS transactions (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  date DATE NOT NULL,
-  type ENUM('INCOME', 'EXPENSE') NOT NULL,
-  category VARCHAR(100) NOT NULL,
-  amount DECIMAL(10, 2) NOT NULL,
-  description VARCHAR(255) DEFAULT ''
-);
-```
 ## Environment Variables
 
-### 2. Configure API Environment
 Create an `.env` file inside the `api/` folder.
 
-Copy the example file and adjust the values for your local MySQL installation.
 You can start from:
 
 ```powershell
@@ -559,25 +529,56 @@ cd api
 copy .env.example .env
 ```
 
-Expected variables:
 Expected values:
 
 ```text
 DB_HOST=localhost
+DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=finance_db
 PORT=5000
 ```
 
-### 3. Install Dependencies
 Adjust these values for your local MySQL installation.
+
+Railway MySQL also exposes variables such as:
+
+```text
+MYSQLHOST
+MYSQLPORT
+MYSQLUSER
+MYSQLPASSWORD
+MYSQLDATABASE
+```
+
+The backend supports both naming styles, so it can run locally and on Railway without code changes.
+
+### Frontend Environment
+
+Create an optional `.env` file inside the `frontend/` folder:
+
+```powershell
+cd frontend
+copy .env.example .env
+```
+
+Local value:
+
+```text
+REACT_APP_API_URL=http://localhost:5000
+```
+
+When deployed, this should point to the hosted API URL, for example:
+
+```text
+REACT_APP_API_URL=https://your-api-service.up.railway.app
+```
 
 ---
 
 ## Local Installation
 
-Run this once in each app folder:
 Install backend dependencies:
 
 ```powershell
@@ -592,14 +593,12 @@ cd ..\frontend
 npm install
 ```
 
-### 4. Run Locally
 ---
 
 ## Running the Application Locally
 
 Use two terminals.
 
-Terminal 1 - backend API:
 ### Terminal 1 - Backend API
 
 ```powershell
@@ -607,7 +606,6 @@ cd api
 npm run dev
 ```
 
-The API runs at `http://localhost:5000`.
 The API runs at:
 
 ```text
@@ -629,7 +627,6 @@ Expected response:
 }
 ```
 
-Terminal 2 - frontend:
 ### Terminal 2 - Frontend
 
 ```powershell
@@ -637,15 +634,12 @@ cd frontend
 npm start
 ```
 
-The React app runs at `http://localhost:3000`.
 The React app runs at:
 
-## Useful Checks
 ```text
 http://localhost:3000
 ```
 
-Frontend test runner:
 ---
 
 ## Useful Commands
@@ -659,7 +653,6 @@ cd frontend
 npm test
 ```
 
-One-time frontend test run:
 One-time test run:
 
 ```powershell
@@ -667,7 +660,6 @@ cd frontend
 $env:CI="true"; npm test -- --watchAll=false
 ```
 
-Frontend production build:
 ### Frontend Production Build
 
 ```powershell
@@ -675,7 +667,6 @@ cd frontend
 npm run build
 ```
 
-Backend health check after starting the API:
 ### Backend Development Server
 
 ```powershell
@@ -692,19 +683,132 @@ npm start
 
 ---
 
+## Deployment Guide
+
+The application can be deployed so that other users can test it from a public link without installing the code locally.
+
+Recommended deployment setup:
+
+- **Frontend:** Vercel
+- **Backend API:** Railway
+- **Database:** Railway MySQL
+
+### 1. Push the Code to GitHub
+
+Create a GitHub repository and push this project.
+
+Make sure sensitive files are not committed:
+
+```text
+api/.env
+frontend/.env
+node_modules/
+```
+
+The repository should include:
+
+```text
+api/.env.example
+frontend/.env.example
+api/railway.json
+frontend/vercel.json
+```
+
+### 2. Deploy MySQL on Railway
+
+1. Create a Railway project.
+2. Add a MySQL database service.
+3. Railway will generate database variables such as:
+   - `MYSQLHOST`
+   - `MYSQLPORT`
+   - `MYSQLUSER`
+   - `MYSQLPASSWORD`
+   - `MYSQLDATABASE`
+
+The backend reads these variables automatically.
+
+### 3. Deploy the Backend API on Railway
+
+1. Add a new Railway service from the GitHub repository.
+2. Set the service root directory to:
+
+```text
+api
+```
+
+3. Railway should use:
+
+```text
+npm start
+```
+
+4. Connect the MySQL variables to the API service.
+5. Deploy the API.
+6. Test:
+
+```text
+https://your-api-service.up.railway.app/api/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "OK",
+  "message": "API is running"
+}
+```
+
+### 4. Deploy the Frontend on Vercel
+
+1. Import the GitHub repository into Vercel.
+2. Set the root directory to:
+
+```text
+frontend
+```
+
+3. Use the default Create React App settings:
+
+```text
+Build command: npm run build
+Output directory: build
+```
+
+4. Add this environment variable in Vercel:
+
+```text
+REACT_APP_API_URL=https://your-api-service.up.railway.app
+```
+
+5. Deploy the frontend.
+
+After deployment, the app will be available at a public URL such as:
+
+```text
+https://your-project-name.vercel.app
+```
+
+### 5. Add the Live Demo Link
+
+After deployment, add the live URL near the top of this README:
+
+```text
+Live Demo: https://your-project-name.vercel.app
+```
+
+---
+
 ## Example CSV File
 
 A ready-to-test file is included in the repository:
 
 ```text
-GET http://localhost:5000/api/health
 test_transactions_upload.csv
 ```
 
-More example API requests are in `api/test.http`.
 Example content:
 
-## Key Features
 ```csv
 date;type;category;amount;description
 2026-05-01;INCOME;Salary;2500,00;Monthly salary
@@ -714,26 +818,14 @@ date;type;category;amount;description
 2026-05-05;INCOME;Freelance;300,00;Small project payment
 ```
 
-- Add, update, delete, filter, and search transactions.
-- Track income, expenses, and balance.
-- Set a local monthly budget and see progress against it.
-- Import CSV transactions with `date, type, category, amount, description`.
-- Export filtered transactions to CSV.
-- View income vs expenses, spending by category, and monthly trends.
 ---
 
 ## Thesis Context
 
-This project is part of the TV-25-13 Personal Finance Tracker thesis and is used to demonstrate:
 This project was developed as part of the **TV-25-13 Personal Finance Tracker thesis**.
 
-- A complete web-based personal finance management system.
-- Separation between UI, API, and database layers.
-- REST API design and database-backed CRUD operations.
-- Data visualization for spending behavior and budget awareness.
 The project demonstrates:
 
-## Roadmap / Future Enhancements
 - Full-stack web application development.
 - Client-side state management with React.
 - REST API design with Express.
@@ -745,11 +837,6 @@ The project demonstrates:
 - Basic account-based data separation.
 - User-centered interface restructuring to reduce complexity.
 
-- User authentication and per-user data isolation.
-- Deployment to cloud hosting such as Render or Vercel.
-- More advanced reporting with monthly/yearly summaries.
-- PDF or Excel export.
-- Predictive analytics and basic spending insights.
 The application is intended to show both technical implementation and practical usability for personal financial management.
 
 ---
@@ -821,7 +908,6 @@ Possible future improvements include:
 
 ---
 
-## Contact
 ## Known Limitations
 
 - Authentication is currently demo-level.

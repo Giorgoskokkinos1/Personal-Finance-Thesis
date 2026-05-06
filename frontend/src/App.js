@@ -21,6 +21,7 @@ import TargetsPage from "./pages/Targets";
 import BudgetPage from "./pages/Budget";
 import LoginPage from "./pages/Login";
 import SetupPage from "./pages/Setup";
+import { apiUrl } from "./config/api";
 import {
   rememberCategoryChoice,
   suggestTransactionCategory,
@@ -217,21 +218,21 @@ function App() {
 
   const fetchTransactions = () => {
     return axios
-      .get("http://localhost:5000/api/transactions")
+      .get(apiUrl("/api/transactions"))
       .then((res) => setTransactions(res.data))
       .catch((err) => console.error("Error fetching:", err));
   };
 
   const fetchTargets = () => {
     return axios
-      .get("http://localhost:5000/api/targets")
+      .get(apiUrl("/api/targets"))
       .then((res) => setTargets(res.data))
       .catch((err) => console.error("Error fetching targets:", err));
   };
 
   const fetchCategories = () => {
     return axios
-      .get("http://localhost:5000/api/categories", {
+      .get(apiUrl("/api/categories"), {
         params: { all: "true" },
       })
       .then((res) => setCategories(res.data.data || []))
@@ -240,41 +241,41 @@ function App() {
 
   const fetchBudgets = () => {
     return axios
-      .get("http://localhost:5000/api/budgets")
+      .get(apiUrl("/api/budgets"))
       .then((res) => setBudgets(res.data))
       .catch((err) => console.error("Error fetching budgets:", err));
   };
 
   const handleAddBudget = (payload) =>
-    axios.post("http://localhost:5000/api/budgets", payload).then(() => {
+    axios.post(apiUrl("/api/budgets"), payload).then(() => {
       fetchBudgets();
     });
 
   const handleUpdateBudget = (id, payload) =>
-    axios.put(`http://localhost:5000/api/budgets/${id}`, payload).then(() => {
+    axios.put(apiUrl(`/api/budgets/${id}`), payload).then(() => {
       fetchBudgets();
     });
 
   const handleAddTarget = (payload) =>
-    axios.post("http://localhost:5000/api/targets", payload).then(() => {
+    axios.post(apiUrl("/api/targets"), payload).then(() => {
       fetchTargets();
     });
 
   const handleUpdateTarget = (id, payload) =>
-    axios.put(`http://localhost:5000/api/targets/${id}`, payload).then(() => {
+    axios.put(apiUrl(`/api/targets/${id}`), payload).then(() => {
       fetchTargets();
     });
 
   const handleDisableTarget = (id) =>
     axios
-      .post(`http://localhost:5000/api/targets/${id}/disable`)
+      .post(apiUrl(`/api/targets/${id}/disable`))
       .then(() => {
         fetchTargets();
       });
 
   const handleEnableTarget = (id, payload) =>
     axios
-      .post(`http://localhost:5000/api/targets/${id}/enable`, payload)
+      .post(apiUrl(`/api/targets/${id}/enable`), payload)
       .then(() => {
         fetchTargets();
       });
@@ -377,7 +378,7 @@ function App() {
       };
 
       axios
-        .post("http://localhost:5000/api/transactions", payload)
+        .post(apiUrl("/api/transactions"), payload)
         .then(() => {
           rememberCategoryChoice({
             type: newTransaction.type,
@@ -410,7 +411,7 @@ function App() {
       }
 
     axios
-      .post("http://localhost:5000/api/transactions/bulk", rows)
+      .post(apiUrl("/api/transactions/bulk"), rows)
       .then(() => {
         rememberCategoryChoice({
           type: newTransaction.type,
@@ -434,7 +435,7 @@ function App() {
     if (!confirmed) return;
 
     axios
-      .delete(`http://localhost:5000/api/transactions/${id}`)
+      .delete(apiUrl(`/api/transactions/${id}`))
       .then(() => {
         fetchTransactions();
         fetchTargets();
@@ -448,7 +449,7 @@ function App() {
   const handleUpdateTransaction = (updatedTx) => {
     axios
       .put(
-        `http://localhost:5000/api/transactions/${updatedTx.id}`,
+        apiUrl(`/api/transactions/${updatedTx.id}`),
         updatedTx
       )
       .then(() => {
@@ -468,7 +469,7 @@ function App() {
   // -----------------------------------
   const handleImportTransactions = (rows) =>
     axios
-      .post("http://localhost:5000/api/transactions/bulk", rows)
+      .post(apiUrl("/api/transactions/bulk"), rows)
       .then((res) => {
         fetchTransactions();
         fetchTargets();

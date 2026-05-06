@@ -1,8 +1,9 @@
 // src/pages/Categories.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
-const API_URL = "http://localhost:5000/api/categories";
+const API_URL = apiUrl("/api/categories");
 
 function CategoriesPage({ onCategoriesChanged }) {
   const [form, setForm] = useState({ type: "", name: "" });
