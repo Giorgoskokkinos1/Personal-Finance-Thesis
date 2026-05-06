@@ -45,6 +45,7 @@ Implemented areas include:
 - CSV import and export.
 - Demo login/sign-up flow.
 - Per-user data separation using signed-in email headers.
+- Login screen shown on every fresh app opening.
 - Immediate workspace reset when switching accounts.
 - Smart category suggestion support.
 - Password strength guidance on sign-up.
@@ -100,10 +101,11 @@ Users can:
 
 - Sign in.
 - Sign up.
-- Use remember-me behavior.
 - Access forgot-password placeholder flow.
 - View and update profile information.
 - View basic personal statistics.
+
+For clarity during thesis demonstration, the application always starts on the login/sign-up screen when opened or refreshed. This makes the account flow visible every time and avoids accidentally opening the previous user's workspace.
 
 Sign-up includes a password strength indicator that encourages stronger passwords by requiring:
 

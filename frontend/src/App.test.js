@@ -40,7 +40,7 @@ jest.mock(
   { virtual: true }
 );
 
-test("renders the finance tracker navigation", async () => {
+test("starts on the login screen", async () => {
   window.localStorage.setItem(
     "financeTrackerUser",
     JSON.stringify({
@@ -53,9 +53,9 @@ test("renders the finance tracker navigation", async () => {
   const App = require("./App").default;
 
   render(<App />);
-  expect(
-    await screen.findByRole("link", { name: "Finance Tracker" })
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeInTheDocument();
+  expect(screen.getByPlaceholderText("you@example.com")).toBeInTheDocument();
+  expect(screen.getByPlaceholderText("Enter password")).toBeInTheDocument();
 
   window.localStorage.removeItem("financeTrackerUser");
 });

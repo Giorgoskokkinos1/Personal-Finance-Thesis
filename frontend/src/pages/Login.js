@@ -72,7 +72,6 @@ function LoginPage({ onLogin }) {
     email: "",
     password: "",
     confirmPassword: "",
-    remember: true,
     terms: false,
   });
   const [message, setMessage] = useState("");
@@ -141,7 +140,6 @@ function LoginPage({ onLogin }) {
     onLogin({
       email: form.email.trim(),
       name: isSignup ? form.name.trim() : undefined,
-      remember: form.remember,
     });
   };
 
@@ -336,27 +334,32 @@ function LoginPage({ onLogin }) {
             </div>
           )}
 
-          {!isForgot && (
+          {!isForgot && isSignup && (
             <div className="login-options mb-4">
               <label className="login-check">
                 <input
                   type="checkbox"
-                  name={isSignup ? "terms" : "remember"}
-                  checked={isSignup ? form.terms : form.remember}
+                  name="terms"
+                  checked={form.terms}
                   onChange={handleChange}
                 />
-                {isSignup ? "Accept local demo access" : "Remember me"}
+                Accept local demo access
               </label>
+            </div>
+          )}
 
-              {!isSignup && (
-                <button
-                  type="button"
-                  className="login-link-button"
-                  onClick={() => switchMode("forgot")}
-                >
-                  Forgot password?
-                </button>
-              )}
+          {!isForgot && !isSignup && (
+            <div className="login-options mb-4">
+              <span className="login-session-note">
+                For demo clarity, the app always starts here when reopened.
+              </span>
+              <button
+                type="button"
+                className="login-link-button"
+                onClick={() => switchMode("forgot")}
+              >
+                Forgot password?
+              </button>
             </div>
           )}
 

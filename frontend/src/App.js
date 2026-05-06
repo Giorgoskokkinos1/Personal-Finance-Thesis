@@ -92,17 +92,7 @@ function App() {
       };
     }
   });
-  const [currentUser, setCurrentUser] = useState(() => {
-    if (typeof window === "undefined") return null;
-    try {
-      const saved =
-        window.localStorage.getItem("financeTrackerUser") ||
-        window.sessionStorage.getItem("financeTrackerUser");
-      return saved ? JSON.parse(saved) : null;
-    } catch (err) {
-      return null;
-    }
-  });
+  const [currentUser, setCurrentUser] = useState(null);
 
   // -----------------------------------
   // Load transactions on startup
@@ -136,7 +126,7 @@ function App() {
     });
   }, [currentUser]);
 
-  const handleLogin = ({ email, name, remember }) => {
+  const handleLogin = ({ email, name }) => {
     const user = {
       email,
       name: name || email.split("@")[0] || "User",
@@ -148,12 +138,6 @@ function App() {
     setProfileModalOpen(false);
     setCurrentUser(user);
     setAxiosUserHeader(user.email);
-
-    if (remember) {
-      window.localStorage.setItem("financeTrackerUser", JSON.stringify(user));
-    } else {
-      window.sessionStorage.setItem("financeTrackerUser", JSON.stringify(user));
-    }
   };
 
   const handleLogout = () => {
@@ -167,10 +151,7 @@ function App() {
   };
 
   const persistUser = (user) => {
-    const storage = window.localStorage.getItem("financeTrackerUser")
-      ? window.localStorage
-      : window.sessionStorage;
-    storage.setItem("financeTrackerUser", JSON.stringify(user));
+    setCurrentUser(user);
   };
 
   const clearWorkspaceData = () => {
