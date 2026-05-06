@@ -1,0 +1,6 @@
+date;type;category;amount;description
+2026-05-01;INCOME;Salary;2500,00;Monthly salary
+2026-05-02;EXPENSE;Food;18,50;Pizza night
+2026-05-03;EXPENSE;Transport;42,00;Fuel
+2026-05-04;EXPENSE;Bills;120,75;Electricity bill
+2026-05-05;INCOME;Freelance;300,00;Small project payment

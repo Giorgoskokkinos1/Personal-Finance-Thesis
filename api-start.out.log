@@ -1,0 +1,6 @@
+
+> api@1.0.0 start
+> node src/server.js
+
+[dotenv@17.2.3] injecting env (5) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+API server running on port 5000
