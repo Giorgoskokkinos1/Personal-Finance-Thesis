@@ -25,7 +25,7 @@ The app is organized around the main actions a user needs:
 - **Budget** - monthly budget setup, status tracking, smart suggestions, and carry-over support.
 - **Goals** - financial goals for savings, travel, investment, or other plans.
 - **Insights** - charts and visual analysis.
-- **Setup** - categories, CSV upload, and profile settings.
+- **Setup** - categories, CSV upload, profile settings, demo data, reset, and thesis information.
 
 ---
 
@@ -47,6 +47,8 @@ Implemented areas include:
 - Per-user data separation using signed-in email headers.
 - Login screen shown on every fresh app opening.
 - Immediate workspace reset when switching accounts.
+- Demo data loading and full workspace reset for presentation/testing.
+- Thesis/about information available from the Setup area.
 - Smart category suggestion support.
 - Password strength guidance on sign-up.
 
@@ -145,7 +147,19 @@ For a production deployment, this should be replaced or strengthened with a real
 
 ---
 
-### 3. Transactions
+### 3. Final Presentation Tools
+
+The Setup tab includes tools that make the project easier to present and test:
+
+- **Load demo data** - replaces the signed-in workspace with realistic sample categories, transactions, budgets, and goals.
+- **Reset workspace** - clears all finance data for the signed-in email after confirmation.
+- **About Thesis** - explains the project purpose, technology stack, and demo limitations.
+
+These tools help the evaluator see dashboards, charts, budgets, and goals immediately without entering data manually before every demonstration.
+
+---
+
+### 4. Transactions
 
 The Transactions tab is the main ledger of the application.
 
@@ -176,7 +190,7 @@ Transaction behavior:
 
 ---
 
-### 4. Smart Category Suggestions
+### 5. Smart Category Suggestions
 
 The app includes a simple smart categorization helper.
 
@@ -200,7 +214,7 @@ This keeps data entry faster without making the app too risky or frustrating.
 
 ---
 
-### 5. Categories
+### 6. Categories
 
 The Categories section is available under Setup.
 
@@ -223,7 +237,7 @@ Category validation:
 
 ---
 
-### 6. Monthly Budget
+### 7. Monthly Budget
 
 The Budget tab helps the user plan and monitor monthly spending.
 
@@ -262,7 +276,7 @@ Status examples:
 
 ---
 
-### 7. Financial Goals
+### 8. Financial Goals
 
 The Goals tab manages longer-term financial targets.
 
@@ -280,19 +294,16 @@ Users can:
 - Set an expected completion date.
 - Track progress.
 - Edit target amount and date.
-- Disable goals when they have no collected amount.
-- Re-enable disabled goals.
+- Keep the Goals screen focused on active targets only.
 
 Goal money movement is handled through transaction types:
 
 - `TRANSFER` - moves cash into a goal.
 - `WITHDRAW` - moves money from a goal back to cash.
 
-Disabled goals cannot be used for new transfers or withdraws.
-
 ---
 
-### 8. CSV Import
+### 9. CSV Import
 
 The Upload CSV feature is available under Setup.
 
@@ -325,7 +336,7 @@ For transfer and withdraw rows, the category/target value must match an active g
 
 ---
 
-### 9. CSV Export
+### 10. CSV Export
 
 The Transactions tab includes CSV export.
 
@@ -339,7 +350,7 @@ Export behavior:
 
 ---
 
-### 10. Dashboard and Insights
+### 11. Dashboard and Insights
 
 The Home tab gives a high-level view of the user's finances.
 
@@ -379,7 +390,7 @@ Setup
 
 This structure was chosen to avoid overwhelming the user.
 
-The most common daily actions are visible directly, while less frequent actions such as category management and CSV upload are grouped under Setup.
+The most common daily actions are visible directly, while less frequent actions such as category management, CSV upload, demo preparation, reset, and thesis information are grouped under Setup.
 
 ---
 

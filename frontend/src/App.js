@@ -278,19 +278,22 @@ function App() {
       fetchTargets();
     });
 
-  const handleDisableTarget = (id) =>
-    axios
-      .post(apiUrl(`/api/targets/${id}/disable`))
-      .then(() => {
-        fetchTargets();
-      });
+  const refreshWorkspaceData = () =>
+    Promise.all([
+      fetchTransactions(),
+      fetchTargets(),
+      fetchCategories(),
+      fetchBudgets(),
+    ]);
 
-  const handleEnableTarget = (id, payload) =>
-    axios
-      .post(apiUrl(`/api/targets/${id}/enable`), payload)
-      .then(() => {
-        fetchTargets();
-      });
+  const handleLoadDemoData = () =>
+    axios.post(apiUrl("/api/demo-data")).then(() => refreshWorkspaceData());
+
+  const handleResetWorkspace = () =>
+    axios.delete(apiUrl("/api/workspace")).then(() => {
+      clearWorkspaceData();
+      return refreshWorkspaceData();
+    });
 
   // -----------------------------------
   // Add transaction (single or recurring)
@@ -1035,8 +1038,6 @@ function App() {
                     targets={targets}
                     onAddTarget={handleAddTarget}
                     onUpdateTarget={handleUpdateTarget}
-                    onDisableTarget={handleDisableTarget}
-                    onEnableTarget={handleEnableTarget}
                   />
                 }
               />
@@ -1048,8 +1049,6 @@ function App() {
                     targets={targets}
                     onAddTarget={handleAddTarget}
                     onUpdateTarget={handleUpdateTarget}
-                    onDisableTarget={handleDisableTarget}
-                    onEnableTarget={handleEnableTarget}
                   />
                 }
               />
@@ -1068,7 +1067,13 @@ function App() {
 
               <Route
                 path="/setup"
-                element={<SetupPage onOpenProfileSettings={openProfileSettings} />}
+                element={
+                  <SetupPage
+                    onOpenProfileSettings={openProfileSettings}
+                    onLoadDemoData={handleLoadDemoData}
+                    onResetWorkspace={handleResetWorkspace}
+                  />
+                }
               />
 
               <Route

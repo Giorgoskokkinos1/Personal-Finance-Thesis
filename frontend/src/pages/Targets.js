@@ -5,15 +5,8 @@ function TargetsPage({
   targets,
   onAddTarget,
   onUpdateTarget,
-  onDisableTarget,
-  onEnableTarget,
 }) {
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const tomorrow = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    return date.toISOString().slice(0, 10);
-  }, []);
 
   const [form, setForm] = useState({
     type: "",
@@ -26,19 +19,11 @@ function TargetsPage({
     targetAmount: "",
     expectedDate: "",
   });
-  const [enableTarget, setEnableTarget] = useState(null);
-  const [enableForm, setEnableForm] = useState({
-    targetAmount: "",
-    expectedDate: "",
-  });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [modalError, setModalError] = useState("");
 
   const activeTargets = targets.filter((target) => target.status !== "DISABLED");
-  const disabledTargets = targets.filter(
-    (target) => target.status === "DISABLED"
-  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -173,65 +158,6 @@ function TargetsPage({
       });
   };
 
-  const handleDisable = (target) => {
-    const confirmed = window.confirm(
-      `Disable "${target.name}"? Disabled targets cannot be used for transfers or withdrawals.`
-    );
-    if (!confirmed) return;
-
-    setError("");
-    setMessage("");
-    onDisableTarget(target.id)
-      .then(() => {
-        setMessage("Target disabled successfully");
-      })
-      .catch((err) => {
-        setError(getApiError(err, "Could not disable target"));
-      });
-  };
-
-  const openEnableModal = (target) => {
-    setMessage("");
-    setError("");
-    setModalError("");
-    setEnableTarget(target);
-    setEnableForm({
-      targetAmount: Number(target.targetAmount || 0).toFixed(2),
-      expectedDate: tomorrow,
-    });
-  };
-
-  const closeEnableModal = () => {
-    setEnableTarget(null);
-    setModalError("");
-  };
-
-  const handleEnableSave = (e) => {
-    e.preventDefault();
-    if (!enableTarget) return;
-
-    const validationError = validateTargetValues({
-      ...enableForm,
-      requireFutureDate: true,
-    });
-    if (validationError) {
-      setModalError(validationError);
-      return;
-    }
-
-    onEnableTarget(enableTarget.id, {
-      targetAmount: Number(enableForm.targetAmount),
-      expectedDate: enableForm.expectedDate,
-    })
-      .then(() => {
-        setMessage("Target enabled successfully");
-        closeEnableModal();
-      })
-      .catch((err) => {
-        setModalError(getApiError(err, "Could not enable target"));
-      });
-  };
-
   const renderTargetCard = (target) => {
     const targetAmount = Number(target.targetAmount || 0);
     const currentAmount = Number(target.currentAmount || 0);
@@ -280,13 +206,6 @@ function TargetsPage({
               onClick={() => openEditModal(target)}
             >
               Edit
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-danger"
-              onClick={() => handleDisable(target)}
-            >
-              Disable
             </button>
           </div>
         </div>
@@ -388,52 +307,15 @@ function TargetsPage({
           <h4 className="mb-3">Active Targets</h4>
 
           {activeTargets.length === 0 ? (
-            <p className="text-muted mb-0">No active financial targets.</p>
+            <div className="empty-state-box">
+              <strong>No financial goals yet</strong>
+              <p>
+                Add a savings, travel, investment, or other goal above. Once you
+                transfer money into a goal, progress appears here.
+              </p>
+            </div>
           ) : (
             <div className="row g-3">{activeTargets.map(renderTargetCard)}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="card shadow-sm border-0">
-        <div className="card-body">
-          <h4 className="mb-3">Disabled Targets</h4>
-
-          {disabledTargets.length === 0 ? (
-            <p className="text-muted mb-0">No disabled targets.</p>
-          ) : (
-            <div className="table-responsive">
-              <table className="table table-striped align-middle">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Target Amount</th>
-                    <th>Expected Date</th>
-                    <th className="text-end">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {disabledTargets.map((target) => (
-                    <tr key={target.id}>
-                      <td>{target.type}</td>
-                      <td>{target.name}</td>
-                      <td>EUR {Number(target.targetAmount || 0).toFixed(2)}</td>
-                      <td>{formatDate(target.expectedDate)}</td>
-                      <td className="text-end">
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-primary"
-                          onClick={() => openEnableModal(target)}
-                        >
-                          Enable
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           )}
         </div>
       </div>
@@ -521,85 +403,6 @@ function TargetsPage({
         </div>
       )}
 
-      {enableTarget && (
-        <div className="target-modal-backdrop" role="presentation">
-          <div
-            className="target-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="enableTargetTitle"
-          >
-            <form onSubmit={handleEnableSave}>
-              <div className="d-flex justify-content-between gap-3 mb-3">
-                <div>
-                  <p className="section-kicker mb-1">Enable target</p>
-                  <h4 id="enableTargetTitle" className="mb-0">
-                    {enableTarget.name}
-                  </h4>
-                </div>
-                <button
-                  type="button"
-                  className="btn-close"
-                  aria-label="Close"
-                  onClick={closeEnableModal}
-                ></button>
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Target Amount (EUR)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={enableForm.targetAmount}
-                  onChange={(e) =>
-                    setEnableForm((prev) => ({
-                      ...prev,
-                      targetAmount: e.target.value,
-                    }))
-                  }
-                  min="0"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Expected Date</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={enableForm.expectedDate}
-                  onChange={(e) =>
-                    setEnableForm((prev) => ({
-                      ...prev,
-                      expectedDate: e.target.value,
-                    }))
-                  }
-                  min={tomorrow}
-                  required
-                />
-              </div>
-
-              {modalError && (
-                <div className="alert alert-danger">{modalError}</div>
-              )}
-
-              <div className="d-flex justify-content-end gap-2">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={closeEnableModal}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Enable
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,8 +1,54 @@
 // src/pages/Setup.js
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function SetupPage({ onOpenProfileSettings }) {
+function SetupPage({
+  onOpenProfileSettings,
+  onLoadDemoData,
+  onResetWorkspace,
+}) {
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [isWorking, setIsWorking] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+
+  const runSetupAction = (action, successMessage) => {
+    setMessage("");
+    setError("");
+    setIsWorking(true);
+
+    action()
+      .then(() => setMessage(successMessage))
+      .catch((err) =>
+        setError(err.response?.data?.error || "Action could not be completed")
+      )
+      .finally(() => setIsWorking(false));
+  };
+
+  const handleLoadDemoData = () => {
+    const confirmed = window.confirm(
+      "Load demo data? This will replace the current workspace for this signed-in email."
+    );
+    if (!confirmed) return;
+
+    runSetupAction(
+      onLoadDemoData,
+      "Demo workspace loaded. You can now review dashboards, budgets, goals, and charts immediately."
+    );
+  };
+
+  const handleResetWorkspace = () => {
+    const confirmed = window.confirm(
+      "Reset this workspace? This permanently removes transactions, categories, goals, and budgets for this signed-in email."
+    );
+    if (!confirmed) return;
+
+    runSetupAction(
+      onResetWorkspace,
+      "Workspace reset. You can start fresh or load demo data again."
+    );
+  };
+
   return (
     <div className="page-shell setup-page">
       <div className="page-header">
@@ -13,6 +59,38 @@ function SetupPage({ onOpenProfileSettings }) {
           on daily money decisions.
         </p>
       </div>
+
+      <div className="setup-final-panel">
+        <div>
+          <p className="section-kicker mb-1">Final presentation tools</p>
+          <h3>Prepare a clean demo in seconds</h3>
+          <p>
+            Load realistic sample data for the thesis presentation, or reset
+            the signed-in workspace when you want a clean start.
+          </p>
+        </div>
+        <div className="setup-final-actions">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleLoadDemoData}
+            disabled={isWorking}
+          >
+            Load demo data
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-danger"
+            onClick={handleResetWorkspace}
+            disabled={isWorking}
+          >
+            Reset workspace
+          </button>
+        </div>
+      </div>
+
+      {message && <div className="alert alert-success mb-0">{message}</div>}
+      {error && <div className="alert alert-danger mb-0">{error}</div>}
 
       <div className="setup-grid">
         <Link className="setup-card" to="/setup/categories">
@@ -42,7 +120,70 @@ function SetupPage({ onOpenProfileSettings }) {
             <p>Change your display name, email, preferences, and quick stats.</p>
           </div>
         </button>
+
+        <button
+          type="button"
+          className="setup-card"
+          onClick={() => setAboutOpen(true)}
+        >
+          <span>A</span>
+          <div>
+            <h3>About Thesis</h3>
+            <p>Review the project purpose, stack, and final presentation notes.</p>
+          </div>
+        </button>
       </div>
+
+      {aboutOpen && (
+        <div className="about-modal-backdrop" role="presentation">
+          <section
+            className="about-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="About Finance Tracker thesis project"
+          >
+            <div className="d-flex justify-content-between gap-3 mb-3">
+              <div>
+                <p className="section-kicker mb-1">Final project</p>
+                <h2>Personal Finance Tracker Thesis</h2>
+              </div>
+              <button
+                type="button"
+                className="btn-close"
+                aria-label="Close about project"
+                onClick={() => setAboutOpen(false)}
+              ></button>
+            </div>
+
+            <p>
+              A full-stack personal finance web application for recording
+              income, expenses, transfers, withdrawals, budgets, goals, CSV
+              imports/exports, and visual spending insights.
+            </p>
+
+            <div className="about-modal-grid">
+              <div>
+                <h4>Built With</h4>
+                <p>React, Bootstrap, Chart.js, Axios, Node.js, Express, MySQL.</p>
+              </div>
+              <div>
+                <h4>Thesis Focus</h4>
+                <p>
+                  Practical money tracking, clear workflows, dashboard insight,
+                  and database-backed REST API design.
+                </p>
+              </div>
+              <div>
+                <h4>Demo Notes</h4>
+                <p>
+                  The login is demo-level. Each email opens a separate workspace
+                  so the project can be presented with different users.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

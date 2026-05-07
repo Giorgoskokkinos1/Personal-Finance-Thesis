@@ -789,6 +789,164 @@ app.put("/api/budgets/:id", async (req, res) => {
 });
 
 // -------------------------------------------------------
+// Workspace demo/final presentation helpers
+// -------------------------------------------------------
+
+const addMonthsToKey = (monthKey, offset) => {
+  const [year, month] = monthKey.split("-").map(Number);
+  const date = new Date(year, month - 1 + offset, 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+};
+
+const dayInMonth = (monthKey, day) => `${monthKey}-${String(day).padStart(2, "0")}`;
+
+const clearWorkspaceForOwner = async (connection, ownerEmail) => {
+  await connection.query("DELETE FROM transactions WHERE owner_email = ?", [
+    ownerEmail,
+  ]);
+  await connection.query("DELETE FROM financial_targets WHERE owner_email = ?", [
+    ownerEmail,
+  ]);
+  await connection.query("DELETE FROM monthly_budgets WHERE owner_email = ?", [
+    ownerEmail,
+  ]);
+  await connection.query("DELETE FROM categories WHERE owner_email = ?", [
+    ownerEmail,
+  ]);
+};
+
+app.delete("/api/workspace", async (req, res) => {
+  const ownerEmail = getOwnerEmail(req);
+  const connection = await db.getConnection();
+
+  try {
+    await connection.beginTransaction();
+    await clearWorkspaceForOwner(connection, ownerEmail);
+    await connection.commit();
+    res.json({ message: "Workspace reset successfully" });
+  } catch (err) {
+    await connection.rollback();
+    console.error("Error resetting workspace:", err);
+    res.status(500).json({ error: "Workspace reset failed" });
+  } finally {
+    connection.release();
+  }
+});
+
+app.post("/api/demo-data", async (req, res) => {
+  const ownerEmail = getOwnerEmail(req);
+  const connection = await db.getConnection();
+  const currentMonth = getCurrentMonthKey();
+  const previousMonth = addMonthsToKey(currentMonth, -1);
+  const nextMonth = addMonthsToKey(currentMonth, 1);
+  const futureMonth = addMonthsToKey(currentMonth, 5);
+
+  try {
+    await connection.beginTransaction();
+    await clearWorkspaceForOwner(connection, ownerEmail);
+
+    const demoCategories = [
+      ["INCOME", "Salary"],
+      ["INCOME", "Freelance"],
+      ["INCOME", "Gift"],
+      ["EXPENSE", "Food"],
+      ["EXPENSE", "Transport"],
+      ["EXPENSE", "Rent"],
+      ["EXPENSE", "Entertainment"],
+      ["EXPENSE", "Health"],
+      ["EXPENSE", "Subscriptions"],
+      ["EXPENSE", "Shopping"],
+    ];
+
+    await connection.query(
+      "INSERT INTO categories (owner_email, type, name) VALUES ?",
+      [demoCategories.map(([type, name]) => [ownerEmail, type, name])]
+    );
+
+    const targetRows = [
+      ["TRAVEL", "Summer Trip", 1800, `${futureMonth}-15`],
+      ["SAVINGS", "Emergency Fund", 3000, `${futureMonth}-28`],
+      ["INVESTMENT", "ETF Portfolio", 2500, `${futureMonth}-20`],
+    ];
+
+    const targetIds = {};
+    for (const [type, name, amount, expectedDate] of targetRows) {
+      const [result] = await connection.query(
+        "INSERT INTO financial_targets (owner_email, type, name, target_amount, expected_date, status) VALUES (?, ?, ?, ?, ?, 'ACTIVE')",
+        [ownerEmail, type, name, amount, expectedDate]
+      );
+      targetIds[name] = result.insertId;
+    }
+
+    const budgetRows = [
+      [ownerEmail, previousMonth, 1450],
+      [ownerEmail, currentMonth, 1500],
+      [ownerEmail, nextMonth, 1550],
+    ];
+
+    await connection.query(
+      "INSERT INTO monthly_budgets (owner_email, month_key, amount) VALUES ?",
+      [budgetRows]
+    );
+
+    const demoTransactions = [
+      [dayInMonth(previousMonth, 1), "INCOME", "Salary", 2200, "Monthly salary", null],
+      [dayInMonth(previousMonth, 3), "EXPENSE", "Rent", 650, "Apartment rent", null],
+      [dayInMonth(previousMonth, 5), "EXPENSE", "Food", 95.4, "Groceries", null],
+      [dayInMonth(previousMonth, 9), "EXPENSE", "Transport", 42, "Fuel and tickets", null],
+      [dayInMonth(previousMonth, 12), "TRANSFER", "Emergency Fund", 250, "Moved money to savings", targetIds["Emergency Fund"]],
+      [dayInMonth(previousMonth, 18), "EXPENSE", "Entertainment", 58.5, "Dinner with friends", null],
+      [dayInMonth(previousMonth, 24), "INCOME", "Freelance", 300, "Small project", null],
+      [dayInMonth(currentMonth, 1), "INCOME", "Salary", 2200, "Monthly salary", null],
+      [dayInMonth(currentMonth, 2), "EXPENSE", "Rent", 650, "Apartment rent", null],
+      [dayInMonth(currentMonth, 4), "EXPENSE", "Food", 76.2, "Supermarket", null],
+      [dayInMonth(currentMonth, 6), "EXPENSE", "Subscriptions", 29.99, "Streaming and apps", null],
+      [dayInMonth(currentMonth, 8), "TRANSFER", "Summer Trip", 200, "Trip savings", targetIds["Summer Trip"]],
+      [dayInMonth(currentMonth, 10), "EXPENSE", "Transport", 35, "Bus card", null],
+      [dayInMonth(currentMonth, 12), "EXPENSE", "Health", 44, "Pharmacy", null],
+      [dayInMonth(currentMonth, 14), "WITHDRAW", "Emergency Fund", 80, "Returned unused savings to cash", targetIds["Emergency Fund"]],
+      [dayInMonth(currentMonth, 16), "EXPENSE", "Shopping", 120, "Clothes", null],
+      [dayInMonth(currentMonth, 18), "INCOME", "Gift", 100, "Family gift", null],
+      [dayInMonth(currentMonth, 20), "TRANSFER", "ETF Portfolio", 150, "Monthly investing", targetIds["ETF Portfolio"]],
+    ];
+
+    await connection.query(
+      "INSERT INTO transactions (owner_email, date, type, category, amount, description, target_id) VALUES ?",
+      [
+        demoTransactions.map(
+          ([date, type, category, amount, description, targetId]) => [
+            ownerEmail,
+            date,
+            type,
+            category,
+            amount,
+            description,
+            targetId,
+          ]
+        ),
+      ]
+    );
+
+    await connection.commit();
+    res.status(201).json({
+      message: "Demo workspace loaded",
+      inserted: {
+        categories: demoCategories.length,
+        targets: targetRows.length,
+        budgets: budgetRows.length,
+        transactions: demoTransactions.length,
+      },
+    });
+  } catch (err) {
+    await connection.rollback();
+    console.error("Error loading demo data:", err);
+    res.status(500).json({ error: "Demo data could not be loaded" });
+  } finally {
+    connection.release();
+  }
+});
+
+// -------------------------------------------------------
 // Transaction endpoints
 // -------------------------------------------------------
 
