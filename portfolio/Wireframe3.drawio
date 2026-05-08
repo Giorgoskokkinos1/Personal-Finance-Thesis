@@ -1,0 +1,55 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="-aZEMUzS1E-K7m5PgyJa">
+    <mxGraphModel dx="1273" dy="886" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="820" width="560" x="270" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Wireframe of the transactions page.&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="200" x="430" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Top navigation bar" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Add transaction form" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Date" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Type" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;li data-section-id=&quot;xnoxgm&quot; data-start=&quot;2368&quot; data-end=&quot;2387&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Category/Target&lt;/span&gt;&lt;/li&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="560" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Amount" vertex="1">
+          <mxGeometry height="60" width="120" x="700" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Description field" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Add transaction button" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Filters section" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Summary cards" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Transaction table" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Pagination" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="qVV8Q6HTD4XCeDGdGkiY-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Export CSV button" vertex="1">
+          <mxGeometry height="60" width="120" x="570" y="670" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

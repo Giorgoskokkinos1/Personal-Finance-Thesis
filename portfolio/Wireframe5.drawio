@@ -1,0 +1,43 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="95YVlnfKeOh0itQl0zcR">
+    <mxGraphModel dx="1018" dy="709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="520" width="550" x="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Wireframe of the goals page&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="175" x="442.5" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Add financial goal form" vertex="1">
+          <mxGeometry height="60" width="120" x="470" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Name" vertex="1">
+          <mxGeometry height="60" width="120" x="410" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Type" vertex="1">
+          <mxGeometry height="60" width="120" x="270" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Target amount" vertex="1">
+          <mxGeometry height="60" width="120" x="550" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Expected date&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="680" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Add target button" vertex="1">
+          <mxGeometry height="60" width="120" x="475" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Active goal card" vertex="1">
+          <mxGeometry height="60" width="120" x="475" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Progress bar" vertex="1">
+          <mxGeometry height="50" width="105" x="482.5" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="Iic_kNWa1sKC_YwIEIV5-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Edit button" vertex="1">
+          <mxGeometry height="30" width="75" x="530" y="410" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

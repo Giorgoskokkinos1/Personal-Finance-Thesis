@@ -1,0 +1,43 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="xtpSM5zCV2ah0SbWyZ28">
+    <mxGraphModel dx="1018" dy="709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="490" width="550" x="250" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;pre class=&quot;overflow-visible! px-0!&quot; data-start=&quot;5560&quot; data-end=&quot;5613&quot;&gt;&lt;div class=&quot;relative w-full mt-4 mb-1&quot;&gt;&lt;div class=&quot;&quot;&gt;&lt;div class=&quot;relative&quot;&gt;&lt;div class=&quot;h-full min-h-0 min-w-0&quot;&gt;&lt;div class=&quot;h-full min-h-0 min-w-0&quot;&gt;&lt;div class=&quot;border border-token-border-light border-radius-3xl corner-superellipse/1.1 rounded-3xl&quot;&gt;&lt;div class=&quot;h-full w-full border-radius-3xl bg-token-bg-elevated-secondary corner-superellipse/1.1 overflow-clip rounded-3xl lxnfua_clipPathFallback&quot;&gt;&lt;div class=&quot;relative&quot;&gt;&lt;div class=&quot;pe-11 pt-3&quot;&gt;&lt;div class=&quot;relative z-0 flex max-w-full&quot;&gt;&lt;div id=&quot;code-block-viewer&quot; dir=&quot;ltr&quot; class=&quot;q9tKkq_viewer cm-editor z-10 light:cm-light dark:cm-light flex h-full w-full flex-col items-stretch ͼs ͼ16&quot;&gt;&lt;div class=&quot;cm-scroller&quot;&gt;&lt;pre class=&quot;cm-content q9tKkq_readonly m-0&quot;&gt;&lt;code&gt;&lt;b&gt;Wireframe of the budget page.&lt;/b&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;&quot;&gt;&lt;div class=&quot;&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="30" width="220" x="415" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Current month summary card" vertex="1">
+          <mxGeometry height="60" width="165" x="442.5" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Budget set" vertex="1">
+          <mxGeometry height="60" width="120" x="263" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Net used" vertex="1">
+          <mxGeometry height="60" width="120" x="405" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Remaining" vertex="1">
+          <mxGeometry height="60" width="120" x="540" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Days left&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="670" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Budget autopilot / suggestion panel" vertex="1">
+          <mxGeometry height="60" width="120" x="465" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Add budget form" vertex="1">
+          <mxGeometry height="60" width="120" x="465" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Budget list table" vertex="1">
+          <mxGeometry height="60" width="120" x="465" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="HCWclNE4bFIfeOZ1U8jg-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Progress bars" vertex="1">
+          <mxGeometry height="60" width="120" x="465" y="420" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

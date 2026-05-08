@@ -1,0 +1,85 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="-u35VcDf6rfd7uUhxJ7n">
+    <mxGraphModel dx="2547" dy="1182" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;General data flow between frontend, backend and database.&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="390" x="130" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-13" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="User input" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-14" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="lDvRyPIT1HGD-_z6hgaL-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Frontend state" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-15" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Frontend validation" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-18" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Backend validation" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-17" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Express route" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-16" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Axios API request" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-21" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="JSON response" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-20" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Database table" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-19" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="MySQL query" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-22" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="React state update" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;pre class=&quot;overflow-visible! px-0!&quot; data-start=&quot;770&quot; data-end=&quot;959&quot;&gt;&lt;div class=&quot;relative w-full mt-4 mb-1&quot;&gt;&lt;div class=&quot;&quot;&gt;&lt;div class=&quot;relative&quot;&gt;&lt;div class=&quot;h-full min-h-0 min-w-0&quot;&gt;&lt;div class=&quot;h-full min-h-0 min-w-0&quot;&gt;&lt;div class=&quot;border border-token-border-light border-radius-3xl corner-superellipse/1.1 rounded-3xl&quot;&gt;&lt;div class=&quot;h-full w-full border-radius-3xl bg-token-bg-elevated-secondary corner-superellipse/1.1 overflow-clip rounded-3xl lxnfua_clipPathFallback&quot;&gt;&lt;div class=&quot;relative&quot;&gt;&lt;div class=&quot;pe-11 pt-3&quot;&gt;&lt;div class=&quot;relative z-0 flex max-w-full&quot;&gt;&lt;div id=&quot;code-block-viewer&quot; dir=&quot;ltr&quot; class=&quot;q9tKkq_viewer cm-editor z-10 light:cm-light dark:cm-light flex h-full w-full flex-col items-stretch ͼs ͼ16&quot;&gt;&lt;div class=&quot;cm-scroller&quot;&gt;&lt;pre class=&quot;cm-content q9tKkq_readonly m-0&quot;&gt;&lt;code&gt;Updated UI&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;&quot;&gt;&lt;div class=&quot;&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="-10" y="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="All API requests include signed-in user email for demo data separation." vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="lDvRyPIT1HGD-_z6hgaL-24" edge="1" parent="1" source="lDvRyPIT1HGD-_z6hgaL-7" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lDvRyPIT1HGD-_z6hgaL-23" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="200" y="710" as="sourcePoint" />
+            <mxPoint x="250" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

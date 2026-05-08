@@ -1,0 +1,40 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="BFnEJRowDQcI52O3RxFS">
+    <mxGraphModel dx="1018" dy="709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="410" width="410" x="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Wireframe of the setup page.&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="210" x="395" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="140" width="370" x="300" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Final presentation tools panel" vertex="1">
+          <mxGeometry height="30" width="120" x="420" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&amp;nbsp;Load demo data button" vertex="1">
+          <mxGeometry height="60" width="120" x="330" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&amp;nbsp;Reset workspace button" vertex="1">
+          <mxGeometry height="60" width="120" x="540" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Categories card" vertex="1">
+          <mxGeometry height="60" width="120" x="330" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Upload CSV card" vertex="1">
+          <mxGeometry height="60" width="120" x="540" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Profile settings card" vertex="1">
+          <mxGeometry height="60" width="120" x="330" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="kWhwz2ce7O-GcEm3MfeL-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="About Thesis card" vertex="1">
+          <mxGeometry height="60" width="120" x="540" y="350" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

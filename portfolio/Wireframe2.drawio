@@ -1,0 +1,37 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="YY4utnOjozhOTcJyvzZd">
+    <mxGraphModel dx="1018" dy="709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="460" width="450" x="220" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Wireframe of the dashboard page.&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="215" x="318" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Top navigation bar" vertex="1">
+          <mxGeometry height="60" width="120" x="380" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Welcome / balance card" vertex="1">
+          <mxGeometry height="60" width="120" x="382.5" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Income card" vertex="1">
+          <mxGeometry height="60" width="120" x="230" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Expense card" vertex="1">
+          <mxGeometry height="60" width="120" x="383" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Balance card" vertex="1">
+          <mxGeometry height="60" width="120" x="540" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Monthly trend section" vertex="1">
+          <mxGeometry height="60" width="120" x="383" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="62tEFd4Wq9Am4QgH0boX-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Insights and alerts section" vertex="1">
+          <mxGeometry height="60" width="120" x="385" y="400" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

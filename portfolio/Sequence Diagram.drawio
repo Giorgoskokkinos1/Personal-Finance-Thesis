@@ -1,0 +1,157 @@
+<mxfile host="Electron" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36">
+  <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
+    <mxGraphModel dx="1018" dy="709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Sequence diagram for adding a transaction.&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="280" x="220" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="User" vertex="1">
+          <mxGeometry height="500" width="100" x="20" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="React Frontend" vertex="1">
+          <mxGeometry height="490" width="100" x="230" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-13" parent="c5L_-CTMP1hdErN1DC3Q-4" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="40" width="10" x="40" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-14" edge="1" parent="c5L_-CTMP1hdErN1DC3Q-4" style="html=1;align=left;spacingLeft=2;endArrow=block;rounded=0;edgeStyle=orthogonalEdgeStyle;curved=0;rounded=0;" target="c5L_-CTMP1hdErN1DC3Q-13" value="Validate required fields">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="75" y="100" />
+            </Array>
+            <mxPoint x="45" y="70" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="MySQL Database" vertex="1">
+          <mxGeometry height="490" width="100" x="690" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Express API" vertex="1">
+          <mxGeometry height="490" width="100" x="450" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-9" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="69.5" y="140" as="sourcePoint" />
+            <mxPoint x="279.5" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-10" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Fill transaction form" vertex="1">
+          <mxGeometry relative="1" x="0.0143" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-15" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" target="c5L_-CTMP1hdErN1DC3Q-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="279.5" y="200" as="sourcePoint" />
+            <mxPoint x="460" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-16" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="POST /api/transactions" vertex="1">
+          <mxGeometry relative="1" x="0.0136" y="-1" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-17" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="40" width="10" x="490" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-18" edge="1" parent="1" style="html=1;align=left;spacingLeft=2;endArrow=block;rounded=0;edgeStyle=orthogonalEdgeStyle;curved=0;rounded=0;" target="c5L_-CTMP1hdErN1DC3Q-17" value="Validate type, amount, category/target">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="525" y="230" />
+            </Array>
+            <mxPoint x="495" y="200" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-19" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="500" y="260" as="sourcePoint" />
+            <mxPoint x="740" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-20" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="INSERT transaction" vertex="1">
+          <mxGeometry relative="1" x="-0.025" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-21" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="740" y="300" as="sourcePoint" />
+            <mxPoint x="500" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-22" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Insert result" vertex="1">
+          <mxGeometry relative="1" x="0.05" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-23" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="500" y="340" as="sourcePoint" />
+            <mxPoint x="280" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-24" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="JSON response" vertex="1">
+          <mxGeometry relative="1" x="-0.0182" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-25" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="280" y="380" as="sourcePoint" />
+            <mxPoint x="500" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-26" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="GET /api/transactions" vertex="1">
+          <mxGeometry relative="1" x="0.0091" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-27" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="500" y="420" as="sourcePoint" />
+            <mxPoint x="740" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-28" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-27" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SELECT user transactions" vertex="1">
+          <mxGeometry relative="1" x="0.0333" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-29" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="740" y="460" as="sourcePoint" />
+            <mxPoint x="500" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-30" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Transaction list" vertex="1">
+          <mxGeometry relative="1" x="0.0083" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-31" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="500" y="500" as="sourcePoint" />
+            <mxPoint x="280" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-32" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-31" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="JSON response" vertex="1">
+          <mxGeometry relative="1" x="0.0273" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-33" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="279.5" y="540" as="sourcePoint" />
+            <mxPoint x="69.5" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5L_-CTMP1hdErN1DC3Q-34" connectable="0" parent="c5L_-CTMP1hdErN1DC3Q-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Updated table and balance" vertex="1">
+          <mxGeometry relative="1" x="0.0143" y="-2" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

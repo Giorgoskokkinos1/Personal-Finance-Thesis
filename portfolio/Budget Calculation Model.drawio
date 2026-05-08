@@ -1,0 +1,49 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="xksvKB1upkWc8wW_n_x5">
+    <mxGraphModel dx="1018" dy="709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Monthly Budget Amount" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Income" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Withdrawals" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Expenses" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Transfers" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Remaining Amount" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;+&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="190" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;+&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="190" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;-&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="190" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;-&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="190" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;=&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="190" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div&gt;Income and withdrawals increase available budget.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Expenses and transfers reduce available budget.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="435" x="280" y="425" as="geometry" />
+        </mxCell>
+        <mxCell id="pCm1UvxBj0Vb91j_NWWB-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Budget Calculation Model&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="230" x="290" y="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
