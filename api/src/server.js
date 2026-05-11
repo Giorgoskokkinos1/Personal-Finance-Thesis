@@ -2,6 +2,7 @@
 
 const express = require("express");
 const cors = require("cors");
+const crypto = require("crypto");
 
 // db.js is in the same folder (api/src/db.js)
 const db = require("./db");
@@ -17,13 +18,128 @@ app.use(express.json());
 const CATEGORY_TYPES = ["INCOME", "EXPENSE"];
 const TRANSACTION_TYPES = ["INCOME", "EXPENSE", "TRANSFER", "WITHDRAW"];
 const TARGET_TYPES = ["SAVINGS", "TRAVEL", "INVESTMENT", "OTHER"];
+const PASSWORD_ITERATIONS = 120000;
+const SESSION_TTL_DAYS = 7;
+const COMMON_PASSWORDS = new Set([
+  "1234",
+  "0000",
+  "1111",
+  "123456",
+  "password",
+  "qwerty",
+]);
+
+const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
+
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const hasStrongPassword = (password) => {
+  const value = String(password || "");
+  return (
+    value.length >= 6 &&
+    /[A-Za-z]/.test(value) &&
+    /\d/.test(value) &&
+    !COMMON_PASSWORDS.has(value.toLowerCase())
+  );
+};
+
+const createPasswordHash = (password, salt = crypto.randomBytes(16).toString("hex")) => {
+  const passwordHash = crypto
+    .pbkdf2Sync(String(password), salt, PASSWORD_ITERATIONS, 64, "sha512")
+    .toString("hex");
+
+  return { passwordHash, passwordSalt: salt };
+};
+
+const verifyPassword = (password, salt, expectedHash) => {
+  const { passwordHash } = createPasswordHash(password, salt);
+
+  if (!expectedHash || passwordHash.length !== String(expectedHash).length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(
+    Buffer.from(passwordHash, "hex"),
+    Buffer.from(String(expectedHash), "hex")
+  );
+};
+
+const createSessionToken = () => crypto.randomBytes(32).toString("hex");
+
+const hashSessionToken = (token) =>
+  crypto.createHash("sha256").update(String(token)).digest("hex");
+
+const getBearerToken = (req) => {
+  const header = String(req.get("authorization") || "");
+  const match = header.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : "";
+};
 
 const normalizeCategoryType = (type) => String(type || "").trim().toUpperCase();
 
 const normalizeCategoryName = (name) => String(name || "").trim();
 
 const getOwnerEmail = (req) =>
-  String(req.get("x-user-email") || "demo@local").trim().toLowerCase();
+  req.authUser?.email || normalizeEmail(req.get("x-user-email") || "demo@local");
+
+const getSafeUser = (user) => ({
+  id: user.id,
+  name: user.name,
+  email: user.email,
+  signedInAt: new Date().toISOString(),
+});
+
+const getAuthenticatedUserFromRequest = async (req) => {
+  const token = getBearerToken(req);
+
+  if (!token) {
+    return null;
+  }
+
+  const [rows] = await db.query(
+    `
+      SELECT u.id, u.name, u.email
+      FROM user_sessions s
+      INNER JOIN users u ON u.id = s.user_id
+      WHERE s.token_hash = ?
+        AND s.expires_at > NOW()
+      LIMIT 1
+    `,
+    [hashSessionToken(token)]
+  );
+
+  return rows[0] || null;
+};
+
+const createUserSession = async (userId) => {
+  const token = createSessionToken();
+  const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000);
+
+  await db.query(
+    "INSERT INTO user_sessions (user_id, token_hash, expires_at) VALUES (?, ?, ?)",
+    [userId, hashSessionToken(token), expiresAt]
+  );
+
+  return { token, expiresAt };
+};
+
+const requireAuthenticatedUser = (req, res, next) => {
+  if (!req.authUser) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+
+  next();
+};
+
+app.use(async (req, res, next) => {
+  try {
+    req.authUser = await getAuthenticatedUserFromRequest(req);
+    next();
+  } catch (err) {
+    console.error("Authentication check failed:", err);
+    next();
+  }
+});
 
 const addOwnerColumn = async (tableName) => {
   try {
@@ -79,6 +195,36 @@ const ensureAccountScoping = async () => {
       console.error("Could not add owner month budget unique index:", err);
     }
   }
+};
+
+const ensureUsersTable = async () => {
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password_hash VARCHAR(255) NOT NULL,
+      password_salt VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )
+  `);
+};
+
+const ensureUserSessionsTable = async () => {
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS user_sessions (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      token_hash VARCHAR(128) NOT NULL UNIQUE,
+      expires_at DATETIME NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT fk_user_sessions_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+    )
+  `);
 };
 
 const claimUnownedData = async (ownerEmail) => {
@@ -244,8 +390,143 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.post("/api/auth/signup", async (req, res) => {
+  const name = String(req.body.name || "").trim();
+  const email = normalizeEmail(req.body.email);
+  const password = String(req.body.password || "");
+
+  if (name.length < 2) {
+    return res.status(400).json({ error: "Name must be at least 2 characters." });
+  }
+
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: "Please enter a valid email address." });
+  }
+
+  if (!hasStrongPassword(password)) {
+    return res.status(400).json({
+      error:
+        "Password must include letters and numbers, use at least 6 characters, and avoid common codes.",
+    });
+  }
+
+  try {
+    const [existingRows] = await db.query("SELECT id FROM users WHERE email = ? LIMIT 1", [
+      email,
+    ]);
+
+    if (existingRows.length) {
+      return res.status(409).json({ error: "An account already exists for this email." });
+    }
+
+    const { passwordHash, passwordSalt } = createPasswordHash(password);
+    const [result] = await db.query(
+      "INSERT INTO users (name, email, password_hash, password_salt) VALUES (?, ?, ?, ?)",
+      [name, email, passwordHash, passwordSalt]
+    );
+
+    const user = { id: result.insertId, name, email };
+    const session = await createUserSession(user.id);
+
+    if (String(req.get("x-claim-legacy") || "").toLowerCase() === "true") {
+      await claimUnownedData(email);
+    }
+
+    res.status(201).json({
+      user: getSafeUser(user),
+      token: session.token,
+      expiresAt: session.expiresAt,
+    });
+  } catch (err) {
+    console.error("Signup failed:", err);
+    res.status(500).json({ error: "Could not create account." });
+  }
+});
+
+app.post("/api/auth/login", async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  const password = String(req.body.password || "");
+
+  if (!isValidEmail(email) || !password) {
+    return res.status(400).json({ error: "Email and password are required." });
+  }
+
+  try {
+    const [rows] = await db.query(
+      "SELECT id, name, email, password_hash, password_salt FROM users WHERE email = ? LIMIT 1",
+      [email]
+    );
+    const user = rows[0];
+
+    if (!user || !verifyPassword(password, user.password_salt, user.password_hash)) {
+      return res.status(401).json({ error: "Invalid email or password." });
+    }
+
+    const session = await createUserSession(user.id);
+
+    if (String(req.get("x-claim-legacy") || "").toLowerCase() === "true") {
+      await claimUnownedData(email);
+    }
+
+    res.json({
+      user: getSafeUser(user),
+      token: session.token,
+      expiresAt: session.expiresAt,
+    });
+  } catch (err) {
+    console.error("Login failed:", err);
+    res.status(500).json({ error: "Could not sign in." });
+  }
+});
+
+app.post("/api/auth/logout", async (req, res) => {
+  const token = getBearerToken(req);
+
+  try {
+    if (token) {
+      await db.query("DELETE FROM user_sessions WHERE token_hash = ?", [
+        hashSessionToken(token),
+      ]);
+    }
+
+    res.json({ message: "Signed out" });
+  } catch (err) {
+    console.error("Logout failed:", err);
+    res.status(500).json({ error: "Could not sign out." });
+  }
+});
+
+app.get("/api/auth/me", requireAuthenticatedUser, (req, res) => {
+  res.json({ user: getSafeUser(req.authUser) });
+});
+
+app.put("/api/auth/profile", requireAuthenticatedUser, async (req, res) => {
+  const name = String(req.body.name || "").trim();
+
+  if (name.length < 2) {
+    return res.status(400).json({ error: "Name must be at least 2 characters." });
+  }
+
+  try {
+    await db.query("UPDATE users SET name = ? WHERE id = ?", [name, req.authUser.id]);
+    res.json({
+      user: getSafeUser({
+        ...req.authUser,
+        name,
+      }),
+    });
+  } catch (err) {
+    console.error("Profile update failed:", err);
+    res.status(500).json({ error: "Could not update profile." });
+  }
+});
+
 app.use("/api", async (req, res, next) => {
   try {
+    if (!req.authUser) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
     if (String(req.get("x-claim-legacy") || "").toLowerCase() === "true") {
       await claimUnownedData(getOwnerEmail(req));
     }
@@ -1307,6 +1588,8 @@ app.get("/api/summary/by-category", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 const bootstrapDatabase = async () => {
+  await ensureUsersTable();
+  await ensureUserSessionsTable();
   await ensureCategoriesTable();
   await ensureFinancialTargetsTable();
   await ensureTransactionTargetSupport();

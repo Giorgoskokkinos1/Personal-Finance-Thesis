@@ -76,6 +76,7 @@ function LoginPage({ onLogin }) {
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isSignup = mode === "signup";
   const isForgot = mode === "forgot";
@@ -95,7 +96,7 @@ function LoginPage({ onLogin }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
@@ -117,8 +118,8 @@ function LoginPage({ onLogin }) {
       return;
     }
 
-    if (form.password.length < 4) {
-      setError("Password must be at least 4 characters.");
+    if (!form.password) {
+      setError("Password is required.");
       return;
     }
 
@@ -137,10 +138,22 @@ function LoginPage({ onLogin }) {
       return;
     }
 
-    onLogin({
-      email: form.email.trim(),
-      name: isSignup ? form.name.trim() : undefined,
-    });
+    try {
+      setIsSubmitting(true);
+      await onLogin({
+        mode: isSignup ? "signup" : "login",
+        email: form.email.trim(),
+        name: isSignup ? form.name.trim() : undefined,
+        password: form.password,
+      });
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+          "Could not access the account. Please check your details."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -221,12 +234,12 @@ function LoginPage({ onLogin }) {
             {isForgot
               ? "Enter your email and we will prepare reset instructions."
               : isSignup
-              ? "Set up local demo access and enter your finance workspace."
+              ? "Create your account and enter your finance workspace."
               : "Sign in to open your finance workspace."}
           </p>
           <div className="account-scope-note">
-            Each email opens a separate demo workspace, so another user starts
-            with their own transactions, categories, goals, and budgets.
+            Each registered email opens a separate workspace, so another user
+            starts with their own transactions, categories, goals, and budgets.
           </div>
         </div>
 
@@ -343,7 +356,7 @@ function LoginPage({ onLogin }) {
                   checked={form.terms}
                   onChange={handleChange}
                 />
-                Accept local demo access
+                Accept account creation for this project app
               </label>
             </div>
           )}
@@ -366,8 +379,14 @@ function LoginPage({ onLogin }) {
           {error && <div className="alert alert-danger">{error}</div>}
           {message && <div className="alert alert-success">{message}</div>}
 
-          <button type="submit" className="btn btn-primary login-submit">
-            {isForgot
+          <button
+            type="submit"
+            className="btn btn-primary login-submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? "Please wait..."
+              : isForgot
               ? "Send reset instructions"
               : isSignup
               ? "Create account"
@@ -386,7 +405,7 @@ function LoginPage({ onLogin }) {
         </form>
 
         <div className="login-footnote">
-          Local demo access. Real user authentication can be added next.
+          Account passwords are stored as salted hashes in the backend database.
         </div>
       </section>
     </main>

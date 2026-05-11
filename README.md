@@ -43,8 +43,8 @@ Implemented areas include:
 - Dashboard insights.
 - Chart-based analytics.
 - CSV import and export.
-- Demo login/sign-up flow.
-- Per-user data separation using signed-in email headers.
+- Database-backed login/sign-up flow.
+- Per-user data separation using authenticated account email.
 - Login screen shown on every fresh app opening.
 - Immediate workspace reset when switching accounts.
 - Demo data loading and full workspace reset for presentation/testing.
@@ -52,7 +52,7 @@ Implemented areas include:
 - Smart category suggestion support.
 - Password strength guidance on sign-up.
 
-The authentication layer is still considered demo-level and can be improved later with real password hashing, sessions, or JWT-based authentication.
+The authentication layer now stores registered users in MySQL, hashes passwords with salted PBKDF2 hashes, and issues short-lived session tokens for API requests. It is suitable for thesis demonstration and local testing, while a production deployment would still add email verification, password reset emails, HTTPS-only cookies, and stronger session management.
 
 ---
 
@@ -95,9 +95,9 @@ The authentication layer is still considered demo-level and can be improved late
 
 ## Main Features
 
-### 1. Demo Login and Sign-Up
+### 1. Login and Sign-Up
 
-The application includes a local/demo account access flow.
+The application includes a database-backed account access flow.
 
 Users can:
 
@@ -116,13 +116,15 @@ Sign-up includes a password strength indicator that encourages stronger password
 - Minimum password length.
 - Avoidance of weak common codes such as `1234`.
 
-> Note: The current login is designed for thesis demonstration and local use. It separates data by email but does not yet implement production-grade authentication.
+On sign-up, the backend validates the user details, stores the account in MySQL, and saves the password as a salted hash instead of plain text. On login, the backend checks the password and returns a session token that the frontend sends with API requests.
+
+> Note: The current authentication is appropriate for thesis demonstration and local use. A public production version should add real password reset emails, HTTPS-only cookies, rate limiting, and email verification.
 
 ---
 
 ### 2. Per-User Data Separation
 
-The backend supports account-scoped data using the signed-in email sent from the frontend.
+The backend supports account-scoped data using the authenticated user's email.
 
 Each user has separate:
 
@@ -137,13 +139,13 @@ The frontend also clears the visible workspace immediately during sign-out or ac
 
 Inside Profile & Settings, the email is treated as the demo account identity and is read-only. To use another account, the user signs out and signs in with a different email address.
 
-The implementation uses request headers for demo scoping:
+The frontend sends an authentication token to the backend:
 
 ```text
-X-User-Email: user@example.com
+Authorization: Bearer <session-token>
 ```
 
-For a production deployment, this should be replaced or strengthened with a real authentication system.
+For compatibility with the original thesis demo data, the backend still stores `owner_email` in the main finance tables. This keeps the data model easy to explain in the dissertation while ensuring that users must sign in before entering their workspace.
 
 ---
 

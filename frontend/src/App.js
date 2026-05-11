@@ -93,28 +93,33 @@ function App() {
     }
   });
   const [currentUser, setCurrentUser] = useState(null);
+  const [authToken, setAuthToken] = useState("");
 
   // -----------------------------------
   // Load transactions on startup
   // -----------------------------------
-  const setAxiosUserHeader = (email) => {
+  const setAxiosUserHeader = (email, token = "") => {
     if (!axios.defaults) axios.defaults = {};
     if (!axios.defaults.headers) axios.defaults.headers = {};
     if (!axios.defaults.headers.common) axios.defaults.headers.common = {};
     if (email) {
       axios.defaults.headers.common["X-User-Email"] = email;
+      if (token) {
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      }
       if (!window.localStorage.getItem("financeTrackerLegacyClaimed")) {
         axios.defaults.headers.common["X-Claim-Legacy"] = "true";
       }
     } else {
       delete axios.defaults.headers.common["X-User-Email"];
       delete axios.defaults.headers.common["X-Claim-Legacy"];
+      delete axios.defaults.headers.common.Authorization;
     }
   };
 
   useEffect(() => {
     if (!currentUser) return;
-    setAxiosUserHeader(currentUser.email);
+    setAxiosUserHeader(currentUser.email, authToken);
     Promise.all([
       fetchTransactions(),
       fetchTargets(),
@@ -124,24 +129,31 @@ function App() {
       window.localStorage.setItem("financeTrackerLegacyClaimed", "true");
       delete axios.defaults.headers.common["X-Claim-Legacy"];
     });
-  }, [currentUser]);
+  }, [currentUser, authToken]);
 
-  const handleLogin = ({ email, name }) => {
-    const user = {
+  const handleLogin = async ({ mode, email, name, password }) => {
+    const endpoint = mode === "signup" ? "/api/auth/signup" : "/api/auth/login";
+    const response = await axios.post(apiUrl(endpoint), {
       email,
-      name: name || email.split("@")[0] || "User",
-      signedInAt: new Date().toISOString(),
-    };
+      name,
+      password,
+    });
+    const { user, token } = response.data;
 
     clearWorkspaceData();
     setProfileMenuOpen(false);
     setProfileModalOpen(false);
+    setAuthToken(token);
+    setAxiosUserHeader(user.email, token);
     setCurrentUser(user);
-    setAxiosUserHeader(user.email);
   };
 
   const handleLogout = () => {
+    axios.post(apiUrl("/api/auth/logout")).catch((err) => {
+      console.error("Logout request failed:", err);
+    });
     clearWorkspaceData();
+    setAuthToken("");
     setCurrentUser(null);
     setProfileMenuOpen(false);
     setProfileModalOpen(false);
@@ -198,19 +210,29 @@ function App() {
     setProfileForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
 
-    const updatedUser = {
-      ...currentUser,
-      name: profileForm.name.trim() || "User",
-      email: currentUser.email,
-    };
+    let updatedUser = currentUser;
     const updatedSettings = {
       currency: profileForm.currency,
       dateFormat: profileForm.dateFormat,
       theme: profileForm.theme,
     };
+
+    try {
+      const response = await axios.put(apiUrl("/api/auth/profile"), {
+        name: profileForm.name.trim() || "User",
+      });
+      updatedUser = response.data.user;
+    } catch (err) {
+      console.error("Profile update failed:", err);
+      updatedUser = {
+        ...currentUser,
+        name: profileForm.name.trim() || "User",
+        email: currentUser.email,
+      };
+    }
 
     setCurrentUser(updatedUser);
     setAppSettings(updatedSettings);
