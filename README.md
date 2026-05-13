@@ -562,18 +562,6 @@ PORT=5000
 
 Adjust these values for your local MySQL installation.
 
-Railway MySQL also exposes variables such as:
-
-```text
-MYSQLHOST
-MYSQLPORT
-MYSQLUSER
-MYSQLPASSWORD
-MYSQLDATABASE
-```
-
-The backend supports both naming styles, so it can run locally and on Railway without code changes.
-
 ### Frontend Environment
 
 Create an optional `.env` file inside the `frontend/` folder:
@@ -589,11 +577,7 @@ Local value:
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-When deployed, this should point to the hosted API URL, for example:
-
-```text
-REACT_APP_API_URL=https://your-api-service.up.railway.app
-```
+For the current thesis version, the app is intended to run locally.
 
 ---
 
@@ -703,119 +687,17 @@ npm start
 
 ---
 
-## Deployment Guide
+## Deployment Status
 
-The application can be deployed so that other users can test it from a public link without installing the code locally.
+This thesis version has **not** been deployed to Railway, Vercel, or another public hosting provider.
 
-Recommended deployment setup:
+The application is currently intended to be run locally using:
 
-- **Frontend:** Vercel
-- **Backend API:** Railway
-- **Database:** Railway MySQL
+- a local MySQL database
+- the Express API at `http://localhost:5000`
+- the React frontend at `http://localhost:3000`
 
-### 1. Push the Code to GitHub
-
-Create a GitHub repository and push this project.
-
-Make sure sensitive files are not committed:
-
-```text
-api/.env
-frontend/.env
-node_modules/
-```
-
-The repository should include:
-
-```text
-api/.env.example
-frontend/.env.example
-api/railway.json
-frontend/vercel.json
-```
-
-### 2. Deploy MySQL on Railway
-
-1. Create a Railway project.
-2. Add a MySQL database service.
-3. Railway will generate database variables such as:
-   - `MYSQLHOST`
-   - `MYSQLPORT`
-   - `MYSQLUSER`
-   - `MYSQLPASSWORD`
-   - `MYSQLDATABASE`
-
-The backend reads these variables automatically.
-
-### 3. Deploy the Backend API on Railway
-
-1. Add a new Railway service from the GitHub repository.
-2. Set the service root directory to:
-
-```text
-api
-```
-
-3. Railway should use:
-
-```text
-npm start
-```
-
-4. Connect the MySQL variables to the API service.
-5. Deploy the API.
-6. Test:
-
-```text
-https://your-api-service.up.railway.app/api/health
-```
-
-Expected response:
-
-```json
-{
-  "status": "OK",
-  "message": "API is running"
-}
-```
-
-### 4. Deploy the Frontend on Vercel
-
-1. Import the GitHub repository into Vercel.
-2. Set the root directory to:
-
-```text
-frontend
-```
-
-3. Use the default Create React App settings:
-
-```text
-Build command: npm run build
-Output directory: build
-```
-
-4. Add this environment variable in Vercel:
-
-```text
-REACT_APP_API_URL=https://your-api-service.up.railway.app
-```
-
-5. Deploy the frontend.
-
-After deployment, the app will be available at a public URL such as:
-
-```text
-https://your-project-name.vercel.app
-```
-
-### 5. Add the Live Demo Link
-
-After deployment, add the live URL near the top of this README:
-
-```text
-Live Demo: https://your-project-name.vercel.app
-```
+Public deployment can be considered as future work if the project needs to be shared through a live link.
 
 ---
 
@@ -888,24 +770,29 @@ Setup -> occasional configuration
 
 ## Security Notes
 
-The current account system is suitable for local thesis demonstration.
+The current account system is database-backed and suitable for local thesis demonstration.
 
 Implemented:
 
-- Demo sign-in and sign-up.
+- User sign-up and login.
+- `users` table for registered accounts.
+- `user_sessions` table for active sessions.
+- Password hashing with a random salt.
+- Session token generation.
+- Hashed session tokens stored in the database.
+- Protected API requests using `Authorization: Bearer <token>`.
 - Password strength guidance.
-- Per-user data separation by signed-in email.
+- Per-user data separation by authenticated email.
 
 Not yet production-ready:
 
-- Password hashing.
-- Secure sessions.
-- JWT authentication.
-- Server-side user table.
 - Email verification.
-- Password reset delivery.
+- Two-factor authentication.
+- Production password reset delivery.
+- Rate limiting and monitoring.
+- Public HTTPS deployment.
 
-For a production version, the next step would be to replace the local/demo login with a backend authentication system.
+For a production version, the next step would be to harden the authentication flow, add real account recovery, and deploy the frontend/backend/database to managed hosting.
 
 ---
 
@@ -913,8 +800,9 @@ For a production version, the next step would be to replace the local/demo login
 
 Possible future improvements include:
 
-- Production authentication with hashed passwords.
 - Cloud deployment.
+- Email verification and production password reset.
+- Rate limiting and monitoring.
 - PDF export.
 - Excel export.
 - More advanced predictive analytics.
@@ -930,10 +818,11 @@ Possible future improvements include:
 
 ## Known Limitations
 
-- Authentication is currently demo-level.
+- The app has not been deployed to a public hosting provider.
 - The app is configured for local development.
 - The backend assumes a MySQL database is available.
 - Some preferences are stored locally in the browser.
+- Forgot password is currently a placeholder flow.
 - The project is optimized for thesis demonstration rather than production deployment.
 
 ---
