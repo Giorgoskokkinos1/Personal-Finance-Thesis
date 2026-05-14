@@ -174,10 +174,10 @@ function SetupPage({
                 </p>
               </div>
               <div>
-                <h4>Demo Notes</h4>
+                <h4>Authentication</h4>
                 <p>
-                  The login is demo-level. Each email opens a separate workspace
-                  so the project can be presented with different users.
+                  User accounts are stored in MySQL with salted password hashes
+                  and session tokens. Each account opens a separate workspace.
                 </p>
               </div>
             </div>
