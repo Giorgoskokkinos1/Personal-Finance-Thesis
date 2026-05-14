@@ -9,6 +9,7 @@ import {
 
 type SpendingCalendarHeatmapProps = {
   transactions: SpendingHeatmapTransaction[];
+  currency?: string;
 };
 
 const monthNames = [
@@ -28,11 +29,6 @@ const monthNames = [
 
 const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "EUR",
-});
-
 function getIntensityClass(day: SpendingHeatmapDay, maxSpent: number): string {
   if (day.totalSpent <= 0 || maxSpent <= 0) return "heatmap-day-empty";
 
@@ -45,7 +41,16 @@ function getIntensityClass(day: SpendingHeatmapDay, maxSpent: number): string {
 
 function SpendingCalendarHeatmap({
   transactions,
+  currency = "EUR",
 }: SpendingCalendarHeatmapProps) {
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+      }),
+    [currency]
+  );
   const years = useMemo(
     () => getAvailableHeatmapYears(transactions),
     [transactions]

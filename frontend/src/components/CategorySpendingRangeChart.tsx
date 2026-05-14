@@ -8,12 +8,8 @@ import {
 
 type CategorySpendingRangeChartProps = {
   transactions: CategorySpendingTransaction[];
+  currency?: string;
 };
-
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "EUR",
-});
 
 const percentFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 1,
@@ -25,8 +21,17 @@ function shortenCategoryLabel(label: string): string {
 
 function CategorySpendingRangeChart({
   transactions,
+  currency = "EUR",
 }: CategorySpendingRangeChartProps) {
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+      }),
+    [currency]
+  );
 
   const spendingByCategory = useMemo(
     () => buildCategorySpending(transactions, dateRange),

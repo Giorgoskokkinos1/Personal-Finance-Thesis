@@ -9,18 +9,25 @@ import {
 
 type MonthlyCashflowChartProps = {
   transactions: Transaction[];
+  currency?: string;
 };
-
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "EUR",
-});
 
 const percentFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 1,
 });
 
-function MonthlyCashflowChart({ transactions }: MonthlyCashflowChartProps) {
+function MonthlyCashflowChart({
+  transactions,
+  currency = "EUR",
+}: MonthlyCashflowChartProps) {
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+      }),
+    [currency]
+  );
   const years = useMemo(
     () => getAvailableCashflowYears(transactions),
     [transactions]

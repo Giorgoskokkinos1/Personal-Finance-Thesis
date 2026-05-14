@@ -10,6 +10,7 @@ function Dashboard({
   monthsForTrend,
   budgets = [],
   targets = [],
+  formatCurrency = (amount) => `EUR ${Number(amount || 0).toFixed(2)}`,
 }) {
   const incomeNumber = Number(totalIncome || 0);
   const expenseNumber = Number(totalExpenses || 0);
@@ -180,8 +181,8 @@ function Dashboard({
 
   if (currentBudget) {
     insights.push(
-      `A monthly budget of EUR ${Number(currentBudget.amount || 0).toFixed(
-        2
+      `A monthly budget of ${formatCurrency(
+        currentBudget.amount
       )} is set for this month. Open the Budget tab for the full status.`
     );
   } else {
@@ -205,13 +206,13 @@ function Dashboard({
     },
     {
       label: "Safe to spend",
-      value: `EUR ${safeToSpendDaily.toFixed(2)}`,
+      value: formatCurrency(safeToSpendDaily),
       detail: daysLeft > 0 ? `per day for ${daysLeft} days` : "month ends today",
       tone: safeToSpendDaily > 0 ? "success" : "danger",
     },
     {
       label: "Forecast",
-      value: `EUR ${projectedRemaining.toFixed(2)}`,
+      value: formatCurrency(projectedRemaining),
       detail: "projected month-end remaining",
       tone: projectedRemaining >= 0 ? "success" : "danger",
     },
@@ -239,7 +240,7 @@ function Dashboard({
     topCategory
       ? {
           title: "Top spend area",
-          text: `${topCategory} is leading this month at EUR ${topCategoryAmount.toFixed(2)}.`,
+          text: `${topCategory} is leading this month at ${formatCurrency(topCategoryAmount)}.`,
           tone: "neutral",
         }
       : {
@@ -251,8 +252,8 @@ function Dashboard({
       title: projectedRemaining >= 0 ? "Forecast looks safe" : "Forecast risk",
       text:
         projectedRemaining >= 0
-          ? `At the current pace, you may finish with EUR ${projectedRemaining.toFixed(2)} remaining.`
-          : `At the current pace, you may exceed budget by EUR ${Math.abs(projectedRemaining).toFixed(2)}.`,
+          ? `At the current pace, you may finish with ${formatCurrency(projectedRemaining)} remaining.`
+          : `At the current pace, you may exceed budget by ${formatCurrency(Math.abs(projectedRemaining))}.`,
       tone: projectedRemaining >= 0 ? "success" : "danger",
     },
   ];
@@ -312,8 +313,8 @@ function Dashboard({
           : "Your financial pulse is under pressure. Focus first on reducing flexible expenses and protecting cash balance.",
       action:
         projectedRemaining >= 0
-          ? `Keep daily spending near EUR ${safeToSpendDaily.toFixed(2)}.`
-          : `Cut about EUR ${Math.abs(projectedRemaining).toFixed(2)} before month end.`,
+          ? `Keep daily spending near ${formatCurrency(safeToSpendDaily)}.`
+          : `Cut about ${formatCurrency(Math.abs(projectedRemaining))} before month end.`,
       tone: healthScore >= 70 ? "success" : "danger",
     },
     {
@@ -333,7 +334,7 @@ function Dashboard({
       action:
         budgetAmount <= 0
           ? "Create this month's budget in the Budget tab."
-          : `Remaining budget is EUR ${budgetRemaining.toFixed(2)}.`,
+          : `Remaining budget is ${formatCurrency(budgetRemaining)}.`,
       tone:
         budgetAmount <= 0
           ? "warning"
@@ -347,7 +348,7 @@ function Dashboard({
       focus: "categories",
       title: topCategory ? `${topCategory} needs attention` : "No category pressure",
       text: topCategory
-        ? `${topCategory} is the largest expense area this month at EUR ${topCategoryAmount.toFixed(2)}.`
+        ? `${topCategory} is the largest expense area this month at ${formatCurrency(topCategoryAmount)}.`
         : "There is not enough expense activity this month to identify a top category.",
       action:
         sortedCategories.length > 1
@@ -391,8 +392,8 @@ function Dashboard({
     insights.push("No expenses have been recorded for the current month yet.");
   } else if (topCategory) {
     insights.push(
-      `The highest expense category this month is "${topCategory}" with a total of EUR ${topCategoryAmount.toFixed(
-        2
+      `The highest expense category this month is "${topCategory}" with a total of ${formatCurrency(
+        topCategoryAmount
       )}.`
     );
   }
@@ -413,7 +414,7 @@ function Dashboard({
               Current balance
             </div>
             <div className={`hero-highlight-value ${balanceClass}`}>
-              EUR {balanceNumber.toFixed(2)}
+              {formatCurrency(balanceNumber)}
             </div>
             <div className="hero-highlight-caption text-muted">
               Income minus expenses, transfers, and withdrawals
@@ -428,7 +429,7 @@ function Dashboard({
             <div className="card-body">
               <div className="kpi-label">Total Income</div>
               <div className="kpi-value text-success">
-                EUR {incomeNumber.toFixed(2)}
+                {formatCurrency(incomeNumber)}
               </div>
               <div className="kpi-subtitle text-muted">
                 All recorded income
@@ -442,7 +443,7 @@ function Dashboard({
             <div className="card-body">
               <div className="kpi-label">Total Expenses</div>
               <div className="kpi-value text-danger">
-                EUR {expenseNumber.toFixed(2)}
+                {formatCurrency(expenseNumber)}
               </div>
               <div className="kpi-subtitle text-muted">
                 All recorded expenses
@@ -456,7 +457,7 @@ function Dashboard({
             <div className="card-body">
               <div className="kpi-label">Balance</div>
               <div className={`kpi-value ${balanceClass}`}>
-                EUR {balanceNumber.toFixed(2)}
+                {formatCurrency(balanceNumber)}
               </div>
               <div className="kpi-subtitle text-muted">
                 Net filtered movement
@@ -577,15 +578,15 @@ function Dashboard({
               </strong>
               <p>
                 {projectedRemaining < 0
-                  ? `Your current pace may exceed budget by EUR ${Math.abs(
-                      projectedRemaining
-                    ).toFixed(2)}.`
+                  ? `Your current pace may exceed budget by ${formatCurrency(
+                      Math.abs(projectedRemaining)
+                    )}.`
                   : budgetAmount <= 0
                   ? "A budget gives the coach something concrete to protect."
                   : targetAtRisk
                   ? `${targetAtRisk.name} may need a small transfer plan.`
-                  : `Safe daily spend is around EUR ${safeToSpendDaily.toFixed(
-                      2
+                  : `Safe daily spend is around ${formatCurrency(
+                      safeToSpendDaily
                     )}.`}
               </p>
             </div>
@@ -660,16 +661,16 @@ function Dashboard({
               <tbody>
                 <tr>
                   <td className="fw-semibold">Income</td>
-                  <td>EUR {(previousTotals.income || 0).toFixed(2)}</td>
-                  <td>EUR {(currentTotals.income || 0).toFixed(2)}</td>
+                  <td>{formatCurrency(previousTotals.income || 0)}</td>
+                  <td>{formatCurrency(currentTotals.income || 0)}</td>
                   <td className={incomeTrendClass}>
                     {formatChange(incomeDeltaPercent)}
                   </td>
                 </tr>
                 <tr>
                   <td className="fw-semibold">Expenses</td>
-                  <td>EUR {(previousTotals.expenses || 0).toFixed(2)}</td>
-                  <td>EUR {(currentTotals.expenses || 0).toFixed(2)}</td>
+                  <td>{formatCurrency(previousTotals.expenses || 0)}</td>
+                  <td>{formatCurrency(currentTotals.expenses || 0)}</td>
                   <td className={expenseTrendClass}>
                     {formatChange(expenseDeltaPercent)}
                   </td>

@@ -22,6 +22,9 @@ function TransactionsPage({
   targets,
   categories,
   categorySuggestion,
+  currency = "EUR",
+  formatCurrency = (amount) => `€${Number(amount || 0).toFixed(2)}`,
+  formatDate = (dateValue) => dateValue,
 }) {
   const allCategories = categories || [];
   const newTransactionCategories = allCategories.filter(
@@ -382,7 +385,7 @@ function TransactionsPage({
               </div>
 
               <div className="col-md-3">
-                <label className="form-label">Amount (€)</label>
+                <label className="form-label">Amount ({currency})</label>
                 <input
                   type="number"
                   className="form-control"
@@ -555,7 +558,7 @@ function TransactionsPage({
                       <th>Date</th>
                       <th>Type</th>
                       <th>Category</th>
-                      <th>Amount (€)</th>
+                      <th>Amount ({currency})</th>
                       <th>Description</th>
                       <th style={{ width: "150px" }}>Actions</th>
                     </tr>
@@ -566,7 +569,7 @@ function TransactionsPage({
                       if (t.date) {
                         const d = new Date(t.date);
                         if (!Number.isNaN(d.getTime())) {
-                          formattedDate = d.toLocaleDateString("en-GB");
+                          formattedDate = formatDate(t.date);
                         }
                       }
 
@@ -704,7 +707,7 @@ function TransactionsPage({
                             {t.type}
                           </td>
                           <td>{t.category}</td>
-                          <td>{parseFloat(t.amount).toFixed(2)}</td>
+                          <td>{formatCurrency(t.amount)}</td>
                           <td>{t.description}</td>
                           <td>
                             <button
@@ -741,7 +744,7 @@ function TransactionsPage({
               <div>
                 <div className="metric-title">Income (filtered)</div>
                 <div className="metric-value text-success mb-0">
-                  €{totalIncome.toFixed(2)}
+                  {formatCurrency(totalIncome)}
                 </div>
               </div>
             </div>
@@ -749,7 +752,7 @@ function TransactionsPage({
               <div>
                 <div className="metric-title">Expenses (filtered)</div>
                 <div className="metric-value text-danger mb-0">
-                  €{totalExpenses.toFixed(2)}
+                  {formatCurrency(totalExpenses)}
                 </div>
               </div>
             </div>
@@ -757,7 +760,7 @@ function TransactionsPage({
               <div>
                 <div className="metric-title">Transfers (filtered)</div>
                 <div className="metric-value text-primary mb-0">
-                  €{totalTransfers.toFixed(2)}
+                  {formatCurrency(totalTransfers)}
                 </div>
               </div>
             </div>
@@ -765,7 +768,7 @@ function TransactionsPage({
               <div>
                 <div className="metric-title">Withdrawals (filtered)</div>
                 <div className="metric-value text-withdraw mb-0">
-                  €{totalWithdrawals.toFixed(2)}
+                  {formatCurrency(totalWithdrawals)}
                 </div>
               </div>
             </div>
@@ -773,10 +776,7 @@ function TransactionsPage({
               <div>
                 <div className="metric-title">Balance (filtered)</div>
                 <div className={`metric-value mb-0 ${balanceClass}`}>
-                  €
-                  {Number.isNaN(balanceNumber)
-                    ? "0.00"
-                    : balanceNumber.toFixed(2)}
+                  {formatCurrency(Number.isNaN(balanceNumber) ? 0 : balanceNumber)}
                 </div>
               </div>
             </div>

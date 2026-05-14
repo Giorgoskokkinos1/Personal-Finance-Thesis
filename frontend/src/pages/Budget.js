@@ -12,7 +12,14 @@ const addMonths = (monthKey, offset) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 };
 
-function BudgetPage({ budgets, transactions, onAddBudget, onUpdateBudget }) {
+function BudgetPage({
+  budgets,
+  transactions,
+  onAddBudget,
+  onUpdateBudget,
+  currency = "EUR",
+  formatCurrency = (amount) => `EUR ${Number(amount || 0).toFixed(2)}`,
+}) {
   const currentMonthKey = useMemo(() => getLocalMonthKey(), []);
   const [form, setForm] = useState({ monthKey: currentMonthKey, amount: "" });
   const [editingId, setEditingId] = useState(null);
@@ -48,12 +55,6 @@ function BudgetPage({ budgets, transactions, onAddBudget, onUpdateBudget }) {
   }, []);
 
   const getApiError = (err, fallback) => err.response?.data?.error || fallback;
-
-  const formatCurrency = (amount) =>
-    `EUR ${Number(amount || 0).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
 
   const formatMonth = (monthKey) => {
     if (!monthKey) return "";
@@ -376,7 +377,7 @@ function BudgetPage({ budgets, transactions, onAddBudget, onUpdateBudget }) {
                 )}
               </div>
               <div className="col-lg-3 col-md-6">
-                <label className="form-label">Budget Amount (EUR)</label>
+                <label className="form-label">Budget Amount ({currency})</label>
                 <input
                   type="number"
                   className="form-control"

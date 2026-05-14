@@ -26,6 +26,10 @@ import {
   rememberCategoryChoice,
   suggestTransactionCategory,
 } from "./utils/smartCategorization";
+import {
+  formatCurrencyAmount,
+  formatDateByPreference,
+} from "./utils/formatters";
 
 function App() {
   const [transactions, setTransactions] = useState([]);
@@ -660,10 +664,12 @@ function App() {
   });
 
   const activeTargets = targets.filter((target) => target.status !== "DISABLED");
-  const profileCurrencyFormatter = new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: appSettings.currency || "EUR",
-  });
+  const selectedCurrency = appSettings.currency || "EUR";
+  const selectedDateFormat = appSettings.dateFormat || "dd/mm/yyyy";
+  const formatCurrency = (amount) =>
+    formatCurrencyAmount(amount, selectedCurrency);
+  const formatDisplayDate = (dateValue) =>
+    formatDateByPreference(dateValue, selectedDateFormat);
   const expenseTransactions = transactions.filter((t) => t.type === "EXPENSE");
   const biggestExpense = expenseTransactions.reduce((max, transaction) => {
     const amount = Number(transaction.amount || 0);
@@ -691,7 +697,7 @@ function App() {
       ? "Warning"
       : "On track";
   const memberSince = currentUser?.signedInAt
-    ? new Date(currentUser.signedInAt).toLocaleDateString()
+    ? formatDisplayDate(currentUser.signedInAt)
     : "Today";
   const displayName = currentUser?.name || "User";
   const displayInitial = displayName.slice(0, 1).toUpperCase();
@@ -699,13 +705,13 @@ function App() {
     { label: "Transactions", value: transactions.length },
     {
       label: "Average expense",
-      value: profileCurrencyFormatter.format(averageExpense),
+      value: formatCurrency(averageExpense),
     },
     {
       label: "Biggest expense",
       value: biggestExpense
-        ? profileCurrencyFormatter.format(Number(biggestExpense.amount || 0))
-        : profileCurrencyFormatter.format(0),
+        ? formatCurrency(Number(biggestExpense.amount || 0))
+        : formatCurrency(0),
     },
     { label: "Most used category", value: mostUsedCategory },
     { label: "Active targets", value: activeTargets.length },
@@ -950,6 +956,7 @@ function App() {
                     monthsForTrend={monthsForTrend}
                     budgets={budgets}
                     targets={targets}
+                    formatCurrency={formatCurrency}
                   />
                 }
               />
@@ -975,6 +982,9 @@ function App() {
                     targets={activeTargets}
                     categories={categories}
                     categorySuggestion={newTransaction.smartCategory}
+                    currency={selectedCurrency}
+                    formatCurrency={formatCurrency}
+                    formatDate={formatDisplayDate}
                   />
                 }
               />
@@ -996,6 +1006,7 @@ function App() {
                     cashflowTransactions={monthlyCashflowTransactions}
                     targetTrendTransactions={targetTrendTransactions}
                     targets={targetOptions}
+                    currency={selectedCurrency}
                   />
                 }
               />
@@ -1017,6 +1028,7 @@ function App() {
                     cashflowTransactions={monthlyCashflowTransactions}
                     targetTrendTransactions={targetTrendTransactions}
                     targets={targetOptions}
+                    currency={selectedCurrency}
                   />
                 }
               />
@@ -1060,6 +1072,9 @@ function App() {
                     targets={targets}
                     onAddTarget={handleAddTarget}
                     onUpdateTarget={handleUpdateTarget}
+                    currency={selectedCurrency}
+                    formatCurrency={formatCurrency}
+                    formatDate={formatDisplayDate}
                   />
                 }
               />
@@ -1071,6 +1086,9 @@ function App() {
                     targets={targets}
                     onAddTarget={handleAddTarget}
                     onUpdateTarget={handleUpdateTarget}
+                    currency={selectedCurrency}
+                    formatCurrency={formatCurrency}
+                    formatDate={formatDisplayDate}
                   />
                 }
               />
@@ -1083,6 +1101,8 @@ function App() {
                     transactions={transactions}
                     onAddBudget={handleAddBudget}
                     onUpdateBudget={handleUpdateBudget}
+                    currency={selectedCurrency}
+                    formatCurrency={formatCurrency}
                   />
                 }
               />
@@ -1163,7 +1183,7 @@ function App() {
                       required
                     />
                     <div className="form-text identity-helper-text">
-                      Email identifies this demo workspace. Sign out and sign in
+                      Email identifies this account workspace. Sign out and sign in
                       with a different email to open a separate account.
                     </div>
                   </div>

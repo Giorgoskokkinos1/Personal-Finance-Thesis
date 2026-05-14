@@ -137,7 +137,7 @@ This means that if another person signs in with a different email, they start wi
 
 The frontend also clears the visible workspace immediately during sign-out or account switching. This prevents the previous user's transactions, budgets, goals, or categories from remaining on screen while the next user's data is loading.
 
-Inside Profile & Settings, the email is treated as the demo account identity and is read-only. To use another account, the user signs out and signs in with a different email address.
+Inside Profile & Settings, the email is treated as the account identity and is read-only. To use another account, the user signs out and signs in with a different email address.
 
 The frontend sends an authentication token to the backend:
 

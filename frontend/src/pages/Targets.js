@@ -5,6 +5,9 @@ function TargetsPage({
   targets,
   onAddTarget,
   onUpdateTarget,
+  currency = "EUR",
+  formatCurrency = (amount) => `EUR ${Number(amount || 0).toFixed(2)}`,
+  formatDate,
 }) {
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -37,12 +40,13 @@ function TargetsPage({
     return d.toISOString().slice(0, 10);
   };
 
-  const formatDate = (dateValue) => {
+  const defaultFormatDate = (dateValue) => {
     if (!dateValue) return "";
     const d = new Date(dateValue);
     if (Number.isNaN(d.getTime())) return dateValue;
     return d.toLocaleDateString("en-GB");
   };
+  const displayDate = formatDate || defaultFormatDate;
 
   const getApiError = (err, fallback) => err.response?.data?.error || fallback;
 
@@ -174,16 +178,16 @@ function TargetsPage({
               </span>
               <h5 className="mt-2 mb-1">{target.name}</h5>
               <p className="text-muted mb-0 small">
-                Expected by {formatDate(target.expectedDate)}
+                Expected by {displayDate(target.expectedDate)}
               </p>
             </div>
             <div className="text-end">
               <div className="metric-title">Progress</div>
               <div className="target-amount">
-                EUR {currentAmount.toFixed(2)}
+                {formatCurrency(currentAmount)}
               </div>
               <div className="text-muted small">
-                of EUR {targetAmount.toFixed(2)}
+                of {formatCurrency(targetAmount)}
               </div>
             </div>
           </div>
@@ -262,7 +266,7 @@ function TargetsPage({
               </div>
 
               <div className="col-md-3">
-                <label className="form-label">Target Amount (EUR)</label>
+                <label className="form-label">Target Amount ({currency})</label>
                 <input
                   type="number"
                   className="form-control"
@@ -345,7 +349,7 @@ function TargetsPage({
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Target Amount (EUR)</label>
+                <label className="form-label">Target Amount ({currency})</label>
                 <input
                   type="number"
                   className="form-control"
@@ -361,7 +365,7 @@ function TargetsPage({
                   required
                 />
                 <div className="form-text">
-                  Collected: EUR {Number(editTarget.currentAmount || 0).toFixed(2)}
+                  Collected: {formatCurrency(editTarget.currentAmount)}
                 </div>
               </div>
 

@@ -134,7 +134,7 @@ function LoginPage({ onLogin }) {
     }
 
     if (isSignup && !form.terms) {
-      setError("Please accept the local demo terms.");
+      setError("Please accept account creation for this project app.");
       return;
     }
 

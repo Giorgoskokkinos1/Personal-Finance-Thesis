@@ -31,6 +31,7 @@ function ChartsPage({
   cashflowTransactions,
   targetTrendTransactions,
   targets,
+  currency = "EUR",
 }) {
   return (
     <div className="page-shell charts-page">
@@ -43,15 +44,22 @@ function ChartsPage({
         </p>
       </div>
 
-      <MonthlyCashflowChart transactions={cashflowTransactions} />
+      <MonthlyCashflowChart transactions={cashflowTransactions} currency={currency} />
 
-      <CategorySpendingRangeChart transactions={cashflowTransactions} />
+      <CategorySpendingRangeChart
+        transactions={cashflowTransactions}
+        currency={currency}
+      />
 
-      <SpendingCalendarHeatmap transactions={cashflowTransactions} />
+      <SpendingCalendarHeatmap
+        transactions={cashflowTransactions}
+        currency={currency}
+      />
 
       <TargetTrendChart
         transactions={targetTrendTransactions}
         targets={targets}
+        currency={currency}
       />
     </div>
   );

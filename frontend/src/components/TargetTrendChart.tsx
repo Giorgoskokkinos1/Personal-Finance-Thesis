@@ -17,19 +17,27 @@ type TargetOption = {
 type TargetTrendChartProps = {
   transactions: TargetTrendTransaction[];
   targets: TargetOption[];
+  currency?: string;
 };
 
 type TrendMode = "monthly" | "cumulative";
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "EUR",
-});
-
-function TargetTrendChart({ transactions, targets }: TargetTrendChartProps) {
+function TargetTrendChart({
+  transactions,
+  targets,
+  currency = "EUR",
+}: TargetTrendChartProps) {
   const [selectedTargetId, setSelectedTargetId] = useState<string>("ALL");
   const [selectedYear, setSelectedYear] = useState<string>("ALL");
   const [trendMode, setTrendMode] = useState<TrendMode>("cumulative");
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+      }),
+    [currency]
+  );
 
   const years = useMemo(
     () => getAvailableTargetTrendYears(transactions),
