@@ -134,7 +134,7 @@ function LoginPage({ onLogin }) {
     }
 
     if (isSignup && !form.terms) {
-      setError("Please accept account creation for this project app.");
+      setError("Please confirm you understand this account stores your finance workspace.");
       return;
     }
 
@@ -165,14 +165,14 @@ function LoginPage({ onLogin }) {
           </div>
           <div>
             <p className="section-kicker mb-2">Finance Tracker</p>
-            <strong>Personal finance workspace</strong>
+            <strong>Personal finance account</strong>
           </div>
         </div>
 
         <h1>Control your money with calm precision.</h1>
         <p>
           Track transactions, budgets, targets, and spending signals from one
-          focused workspace built for everyday financial decisions.
+          focused account built for everyday financial decisions.
         </p>
 
         <div className="login-signal-grid">
@@ -234,12 +234,12 @@ function LoginPage({ onLogin }) {
             {isForgot
               ? "Enter your email and we will prepare reset instructions."
               : isSignup
-              ? "Create your account and enter your finance workspace."
-              : "Sign in to open your finance workspace."}
+              ? "Create your account and start tracking your finances."
+              : "Sign in to open your finance dashboard."}
           </p>
           <div className="account-scope-note">
-            Each registered email opens a separate workspace, so another user
-            starts with their own transactions, categories, goals, and budgets.
+            Each registered email has its own private finance data, including
+            transactions, categories, budgets, and goals.
           </div>
         </div>
 
@@ -356,7 +356,7 @@ function LoginPage({ onLogin }) {
                   checked={form.terms}
                   onChange={handleChange}
                 />
-                Accept account creation for this project app
+                I understand this account stores my finance workspace
               </label>
             </div>
           )}
@@ -364,7 +364,7 @@ function LoginPage({ onLogin }) {
           {!isForgot && !isSignup && (
             <div className="login-options mb-4">
               <span className="login-session-note">
-                For demo clarity, the app always starts here when reopened.
+                For privacy, the app starts on this screen when reopened.
               </span>
               <button
                 type="button"

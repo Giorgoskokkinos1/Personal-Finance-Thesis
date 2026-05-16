@@ -895,10 +895,10 @@ function App() {
                       </div>
 
                       <button type="button" onClick={openProfileSettings}>
-                        Profile & Settings
+                        Account settings
                       </button>
                       <button type="button" onClick={openProfileSettings}>
-                        App statistics
+                        Finance statistics
                       </button>
                       <button type="button" className="danger" onClick={handleLogout}>
                         Logout
@@ -1144,8 +1144,8 @@ function App() {
                   {profileForm.name.slice(0, 1).toUpperCase() || "U"}
                 </div>
                 <div>
-                  <p className="section-kicker mb-1">Personal workspace</p>
-                  <h2>Profile & Settings</h2>
+                  <p className="section-kicker mb-1">Account center</p>
+                  <h2>Account & Preferences</h2>
                   <p>Member since {memberSince}</p>
                 </div>
                 <button
@@ -1183,8 +1183,8 @@ function App() {
                       required
                     />
                     <div className="form-text identity-helper-text">
-                      Email identifies this account workspace. Sign out and sign in
-                      with a different email to open a separate account.
+                      This email is the account identity used to keep your
+                      financial records separate and secure.
                     </div>
                   </div>
 

@@ -27,25 +27,25 @@ function SetupPage({
 
   const handleLoadDemoData = () => {
     const confirmed = window.confirm(
-      "Load demo data? This will replace the current workspace for this signed-in email."
+      "Load sample data? This will replace the current account data for this signed-in email."
     );
     if (!confirmed) return;
 
     runSetupAction(
       onLoadDemoData,
-      "Demo workspace loaded. You can now review dashboards, budgets, goals, and charts immediately."
+      "Sample workspace loaded. You can now review dashboards, budgets, goals, and charts immediately."
     );
   };
 
   const handleResetWorkspace = () => {
     const confirmed = window.confirm(
-      "Reset this workspace? This permanently removes transactions, categories, goals, and budgets for this signed-in email."
+      "Reset this account workspace? This permanently removes transactions, categories, goals, and budgets for this signed-in email."
     );
     if (!confirmed) return;
 
     runSetupAction(
       onResetWorkspace,
-      "Workspace reset. You can start fresh or load demo data again."
+      "Account workspace reset. You can start fresh or load sample data again."
     );
   };
 
@@ -62,11 +62,11 @@ function SetupPage({
 
       <div className="setup-final-panel">
         <div>
-          <p className="section-kicker mb-1">Final presentation tools</p>
-          <h3>Prepare a clean demo in seconds</h3>
+          <p className="section-kicker mb-1">Workspace tools</p>
+          <h3>Prepare account data in seconds</h3>
           <p>
-            Load realistic sample data for the thesis presentation, or reset
-            the signed-in workspace when you want a clean start.
+            Load realistic sample records for review, or reset the signed-in
+            account when you want a clean start.
           </p>
         </div>
         <div className="setup-final-actions">
@@ -76,7 +76,7 @@ function SetupPage({
             onClick={handleLoadDemoData}
             disabled={isWorking}
           >
-            Load demo data
+            Load sample data
           </button>
           <button
             type="button"
@@ -116,8 +116,8 @@ function SetupPage({
         >
           <span>P</span>
           <div>
-            <h3>Profile Settings</h3>
-            <p>Change your display name, email, preferences, and quick stats.</p>
+            <h3>Account Settings</h3>
+            <p>Manage display name, preferences, and account statistics.</p>
           </div>
         </button>
 
@@ -128,8 +128,8 @@ function SetupPage({
         >
           <span>A</span>
           <div>
-            <h3>About Thesis</h3>
-            <p>Review the project purpose, stack, and final presentation notes.</p>
+            <h3>About Project</h3>
+            <p>Review the project purpose, technology stack, and security model.</p>
           </div>
         </button>
       </div>
@@ -144,7 +144,7 @@ function SetupPage({
           >
             <div className="d-flex justify-content-between gap-3 mb-3">
               <div>
-                <p className="section-kicker mb-1">Final project</p>
+                <p className="section-kicker mb-1">Project overview</p>
                 <h2>Personal Finance Tracker Thesis</h2>
               </div>
               <button
@@ -169,8 +169,8 @@ function SetupPage({
               <div>
                 <h4>Thesis Focus</h4>
                 <p>
-                  Practical money tracking, clear workflows, dashboard insight,
-                  and database-backed REST API design.
+                  Practical money tracking, clear workflows, dashboard insights,
+                  and secure database-backed REST API design.
                 </p>
               </div>
               <div>
