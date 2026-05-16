@@ -2478,6 +2478,39 @@ button.nav-user-chip {
   content: "";
 }
 
+.hero-card-danger {
+  border: 1px solid rgba(215, 47, 75, 0.24) !important;
+  box-shadow: 0 24px 50px rgba(215, 47, 75, 0.12) !important;
+}
+
+.hero-card-danger::before {
+  background: linear-gradient(180deg, #d72f4b, #f59e0b);
+}
+
+.budget-alert-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.65rem;
+  border: 1px solid rgba(215, 47, 75, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 241, 242, 0.92);
+  color: #9f1239;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.7rem;
+}
+
+.financial-pulse-card-danger {
+  border: 1px solid rgba(215, 47, 75, 0.22) !important;
+  box-shadow: 0 24px 50px rgba(215, 47, 75, 0.1) !important;
+}
+
+.financial-pulse-card-danger::before {
+  background: linear-gradient(90deg, #d72f4b, #ef4444, #f59e0b);
+}
+
 .pulse-score-panel {
   display: grid;
   width: min(100%, 310px);
@@ -3186,6 +3219,14 @@ body::after {
 
 .financial-pulse-card::before {
   background: linear-gradient(90deg, #436c68, #7d8f68, #b4875e);
+}
+
+.hero-card-danger::before {
+  background: linear-gradient(180deg, #d72f4b, #ef4444 52%, #f59e0b);
+}
+
+.financial-pulse-card-danger::before {
+  background: linear-gradient(90deg, #d72f4b, #ef4444, #f59e0b);
 }
 
 .money-coach-card::before {

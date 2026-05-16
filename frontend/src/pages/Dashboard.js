@@ -117,6 +117,7 @@ function Dashboard({
   const budgetAmount = Number(currentBudget?.amount || 0);
   const budgetRemaining =
     budgetAmount + currentMonthPositive - currentMonthNegative;
+  const isOverMonthlyBudget = budgetAmount > 0 && budgetRemaining < 0;
   const budgetUsedNet = Math.max(currentMonthNegative - currentMonthPositive, 0);
   const budgetUsedPercent =
     budgetAmount > 0 ? Math.min((budgetUsedNet / budgetAmount) * 100, 140) : 0;
@@ -131,9 +132,9 @@ function Dashboard({
     budgetAmount <= 0
       ? "Set budget"
       : budgetUsedPercent > monthProgressPercent + 15
-      ? "Fast burn"
+      ? "High usage"
       : budgetUsedPercent > monthProgressPercent
-      ? "Watch pace"
+      ? "Monitor pace"
       : "Controlled";
 
   const healthScore = Math.max(
@@ -191,7 +192,7 @@ function Dashboard({
 
   const pulseCards = [
     {
-      label: "Budget burn",
+      label: "Budget usage",
       value:
         budgetAmount > 0
           ? `${Math.min(budgetUsedPercent, 999).toFixed(0)}%`
@@ -205,7 +206,7 @@ function Dashboard({
           : "success",
     },
     {
-      label: "Safe to spend",
+      label: "Daily allowance",
       value: formatCurrency(safeToSpendDaily),
       detail: daysLeft > 0 ? `per day for ${daysLeft} days` : "month ends today",
       tone: safeToSpendDaily > 0 ? "success" : "danger",
@@ -213,7 +214,7 @@ function Dashboard({
     {
       label: "Forecast",
       value: formatCurrency(projectedRemaining),
-      detail: "projected month-end remaining",
+      detail: "projected remaining",
       tone: projectedRemaining >= 0 ? "success" : "danger",
     },
   ];
@@ -221,8 +222,8 @@ function Dashboard({
   const smartInsights = [
     budgetAmount <= 0
       ? {
-          title: "Budget missing",
-          text: "Set this month's budget to activate burn-rate and safe-to-spend guidance.",
+          title: "Budget not set",
+          text: "Set this month's budget to activate usage, forecast, and daily allowance guidance.",
           tone: "warning",
         }
       : {
@@ -239,17 +240,17 @@ function Dashboard({
         },
     topCategory
       ? {
-          title: "Top spend area",
+          title: "Largest spend category",
           text: `${topCategory} is leading this month at ${formatCurrency(topCategoryAmount)}.`,
           tone: "neutral",
         }
       : {
-          title: "Quiet month",
-          text: "No expense category is standing out yet this month.",
+          title: "No category concentration",
+          text: "No expense category is currently dominating this month's activity.",
           tone: "success",
         },
     {
-      title: projectedRemaining >= 0 ? "Forecast looks safe" : "Forecast risk",
+      title: projectedRemaining >= 0 ? "Forecast within plan" : "Forecast risk",
       text:
         projectedRemaining >= 0
           ? `At the current pace, you may finish with ${formatCurrency(projectedRemaining)} remaining.`
@@ -306,15 +307,16 @@ function Dashboard({
   const coachCards = [
     {
       focus: "overview",
-      title: healthScore >= 70 ? "Your setup is stable" : "Stabilize the month",
+      title:
+        healthScore >= 70 ? "Financial position is stable" : "Reduce monthly pressure",
       text:
         healthScore >= 70
-          ? "Your current balance and forecast are holding up. Keep watching the budget pace and avoid late-month spikes."
-          : "Your financial pulse is under pressure. Focus first on reducing flexible expenses and protecting cash balance.",
+          ? "Your balance remains positive, but budget pace should continue to be monitored."
+          : "Current activity is placing pressure on the month. Prioritise reducing flexible expenses and protecting cash balance.",
       action:
         projectedRemaining >= 0
-          ? `Keep daily spending near ${formatCurrency(safeToSpendDaily)}.`
-          : `Cut about ${formatCurrency(Math.abs(projectedRemaining))} before month end.`,
+          ? `Maintain daily spending near ${formatCurrency(safeToSpendDaily)}.`
+          : `Reduce planned spending by approximately ${formatCurrency(Math.abs(projectedRemaining))} before month end.`,
       tone: healthScore >= 70 ? "success" : "danger",
     },
     {
@@ -323,11 +325,11 @@ function Dashboard({
         budgetAmount <= 0
           ? "Add a budget"
           : budgetUsedPercent > monthProgressPercent
-          ? "Budget pace is ahead of time"
-          : "Budget pace is controlled",
+          ? "Budget usage is ahead of schedule"
+          : "Budget usage is controlled",
       text:
         budgetAmount <= 0
-          ? "A current-month budget unlocks burn-rate, forecast, and safe-to-spend guidance."
+          ? "A current-month budget unlocks usage, forecast, and daily allowance guidance."
           : `Budget used is ${budgetUsedPercent.toFixed(
               0
             )}% while the month is ${monthProgressPercent.toFixed(0)}% complete.`,
@@ -346,7 +348,9 @@ function Dashboard({
     },
     {
       focus: "categories",
-      title: topCategory ? `${topCategory} needs attention` : "No category pressure",
+      title: topCategory
+        ? `${topCategory} requires attention`
+        : "No category concentration",
       text: topCategory
         ? `${topCategory} is the largest expense area this month at ${formatCurrency(topCategoryAmount)}.`
         : "There is not enough expense activity this month to identify a top category.",
@@ -361,7 +365,7 @@ function Dashboard({
     },
     {
       focus: "targets",
-      title: targetAtRisk ? "A target may be behind pace" : "Targets look calm",
+      title: targetAtRisk ? "A target may be behind pace" : "Target progress is on track",
       text: targetAtRisk
         ? `${targetAtRisk.name} appears behind its expected progress for the selected date.`
         : activeTargets.length > 0
@@ -381,12 +385,12 @@ function Dashboard({
 
   const coachHeadline =
     projectedRemaining < 0
-      ? "Reduce flexible spending before month end."
+      ? "Spending pace is above plan; reduce flexible costs before month end."
       : budgetAmount <= 0
-      ? "Set a budget to unlock stronger coaching."
+      ? "Create a monthly budget to activate tailored guidance."
       : monthSpendDelta !== null && monthSpendDelta > 25
-      ? "Spending is rising quickly versus last month."
-      : "Stay steady and keep the current pace.";
+      ? "Spending is increasing compared with last month."
+      : "Current spending pace is within plan.";
 
   if (currentMonthExpenseTransactions.length === 0) {
     insights.push("No expenses have been recorded for the current month yet.");
@@ -400,13 +404,17 @@ function Dashboard({
 
   return (
     <div className="page-shell dashboard-page">
-      <div className="card hero-card border-0 shadow-sm mb-4">
+      <div
+        className={`card hero-card border-0 shadow-sm mb-4 ${
+          isOverMonthlyBudget ? "hero-card-danger" : ""
+        }`}
+      >
         <div className="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between">
           <div className="hero-text">
             <h1 className="hero-title mb-1">Welcome to your Finance Tracker</h1>
             <p className="hero-subtitle mb-0">
-              Review your overall position and see how your spending changes
-              over time.
+              Monitor cashflow, budget pressure, and goal progress from one
+              secure financial workspace.
             </p>
           </div>
           <div className="hero-highlight mt-3 mt-md-0 text-md-end">
@@ -419,6 +427,11 @@ function Dashboard({
             <div className="hero-highlight-caption text-muted">
               Income minus expenses, transfers, and withdrawals
             </div>
+            {isOverMonthlyBudget && (
+              <div className="budget-alert-chip">
+                Over monthly budget by {formatCurrency(Math.abs(budgetRemaining))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -467,7 +480,11 @@ function Dashboard({
         </div>
       </div>
 
-      <div className="card financial-pulse-card shadow-sm border-0 mb-4">
+      <div
+        className={`card financial-pulse-card shadow-sm border-0 mb-4 ${
+          isOverMonthlyBudget ? "financial-pulse-card-danger" : ""
+        }`}
+      >
         <div className="card-body">
           <div className="d-flex flex-column flex-xl-row justify-content-between gap-4">
             <div className="pulse-score-panel">
@@ -479,15 +496,15 @@ function Dashboard({
                 </div>
               </div>
               <p className="text-muted mb-0">
-                A live read on budget pace, projected month-end position, and
-                current cash pressure.
+                Tracks budget pace, month-end forecast, and available spending
+                capacity.
               </p>
             </div>
 
             <div className="pulse-content">
               <div className="pulse-meter-row">
                 <div>
-                  <div className="metric-title">Budget burn meter</div>
+                  <div className="metric-title">Budget usage meter</div>
                   <div className="pulse-meter-caption">
                     Budget used versus month elapsed
                   </div>
@@ -539,7 +556,7 @@ function Dashboard({
           <div className="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
             <div>
               <p className="section-kicker mb-3">Money Coach</p>
-              <h4 className="mb-2">Smart guidance for this month</h4>
+              <h4 className="mb-2">Financial guidance for this month</h4>
               <p className="text-muted mb-0">
                 {coachHeadline}
               </p>
@@ -569,12 +586,12 @@ function Dashboard({
               <div className="metric-title">Recommended next action</div>
               <strong>
                 {projectedRemaining < 0
-                  ? "Slow spending now"
+                  ? "Reduce discretionary spending"
                   : budgetAmount <= 0
-                  ? "Create budget"
+                  ? "Create monthly budget"
                   : targetAtRisk
-                  ? "Review target pace"
-                  : "Keep current rhythm"}
+                  ? "Review target funding"
+                  : "Maintain current plan"}
               </strong>
               <p>
                 {projectedRemaining < 0
@@ -582,9 +599,9 @@ function Dashboard({
                       Math.abs(projectedRemaining)
                     )}.`
                   : budgetAmount <= 0
-                  ? "A budget gives the coach something concrete to protect."
+                  ? "A budget provides the baseline needed for reliable guidance."
                   : targetAtRisk
-                  ? `${targetAtRisk.name} may need a small transfer plan.`
+                  ? `${targetAtRisk.name} may require an adjusted funding plan.`
                   : `Safe daily spend is around ${formatCurrency(
                       safeToSpendDaily
                     )}.`}
