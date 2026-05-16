@@ -21,6 +21,7 @@ import TargetsPage from "./pages/Targets";
 import BudgetPage from "./pages/Budget";
 import LoginPage from "./pages/Login";
 import SetupPage from "./pages/Setup";
+import ManualPage from "./pages/Manual";
 import { apiUrl } from "./config/api";
 import {
   rememberCategoryChoice,
@@ -868,6 +869,11 @@ function App() {
                     Setup
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/manual">
+                    Help
+                  </NavLink>
+                </li>
               </ul>
 
               {/* Bell on the right, visible on every page */}
@@ -1117,6 +1123,8 @@ function App() {
                   />
                 }
               />
+
+              <Route path="/manual" element={<ManualPage />} />
 
               <Route
                 path="*"

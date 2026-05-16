@@ -1382,6 +1382,10 @@ body::after {
   content: "S";
 }
 
+.app-navbar .nav-link[href="/manual"]::before {
+  content: "?";
+}
+
 .app-navbar .nav-link:hover,
 .app-navbar .nav-link.active {
   border-color: rgba(255, 255, 255, 0.13);
@@ -2896,6 +2900,158 @@ button.nav-user-chip {
   font-size: 0.9rem;
 }
 
+.manual-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.manual-quick-card {
+  display: grid;
+  gap: 0.45rem;
+  min-height: 150px;
+  border: 1px solid rgba(216, 226, 236, 0.9);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(67, 108, 104, 0.11), transparent 44%),
+    rgba(255, 255, 255, 0.84);
+  color: #172235;
+  padding: 1rem;
+  text-decoration: none;
+  box-shadow: 0 18px 40px rgba(15, 30, 45, 0.06);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.manual-quick-card:hover {
+  border-color: rgba(67, 108, 104, 0.32);
+  color: #172235;
+  transform: translateY(-2px);
+  box-shadow: 0 22px 46px rgba(15, 30, 45, 0.1);
+}
+
+.manual-quick-card span {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #436c68, #6f6a8f);
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.manual-quick-card strong {
+  font-size: 1.02rem;
+  font-weight: 850;
+}
+
+.manual-quick-card small {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.manual-layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.85fr) minmax(0, 1.6fr);
+  gap: 1rem;
+}
+
+.manual-nav {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+}
+
+.manual-nav button {
+  border: 1px solid rgba(216, 226, 236, 0.92);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.76);
+  color: #172235;
+  padding: 0.85rem;
+  text-align: left;
+}
+
+.manual-nav button.active {
+  border-color: rgba(67, 108, 104, 0.38);
+  background:
+    linear-gradient(135deg, rgba(67, 108, 104, 0.14), transparent 42%),
+    rgba(255, 255, 255, 0.9);
+  box-shadow: inset 4px 0 0 #436c68;
+}
+
+.manual-nav span {
+  display: block;
+  font-weight: 850;
+}
+
+.manual-nav small {
+  display: block;
+  color: var(--muted);
+  line-height: 1.35;
+  margin-top: 0.2rem;
+}
+
+.manual-content-card {
+  min-height: 420px;
+  border: 1px solid rgba(216, 226, 236, 0.9);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 247, 0.94));
+  box-shadow: 0 22px 50px rgba(15, 30, 45, 0.07);
+  padding: 1.35rem;
+}
+
+.manual-content-card h2 {
+  color: #172235;
+  font-size: 1.75rem;
+  font-weight: 880;
+  margin-bottom: 0.5rem;
+}
+
+.manual-summary {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.manual-step-list {
+  display: grid;
+  gap: 0.85rem;
+  counter-reset: manual-step;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.manual-step-list li {
+  position: relative;
+  border: 1px solid rgba(216, 226, 236, 0.82);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(67, 108, 104, 0.06), transparent 46%),
+    rgba(255, 255, 255, 0.82);
+  color: #263548;
+  line-height: 1.55;
+  padding: 0.95rem 1rem 0.95rem 3.25rem;
+}
+
+.manual-step-list li::before {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  display: inline-grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: 9px;
+  background: #e7f4f2;
+  color: #0f5663;
+  content: counter(manual-step);
+  counter-increment: manual-step;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .page-shell {
   position: relative;
   isolation: isolate;
@@ -3132,6 +3288,12 @@ body::after {
     linear-gradient(225deg, rgba(235, 216, 211, 0.5), transparent 50%);
 }
 
+.manual-page::before {
+  background:
+    linear-gradient(135deg, rgba(229, 236, 226, 0.86), transparent 44%),
+    linear-gradient(225deg, rgba(226, 232, 242, 0.62), transparent 50%);
+}
+
 .page-header,
 .hero-card {
   background:
@@ -3304,7 +3466,9 @@ body::after {
   .pulse-card-grid,
   .smart-insight-grid,
   .coach-body-grid,
-  .coach-card-grid {
+  .coach-card-grid,
+  .manual-quick-grid,
+  .manual-layout {
     grid-template-columns: 1fr;
   }
 

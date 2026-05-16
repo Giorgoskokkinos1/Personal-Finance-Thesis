@@ -121,6 +121,14 @@ function SetupPage({
           </div>
         </button>
 
+        <Link className="setup-card" to="/manual">
+          <span>H</span>
+          <div>
+            <h3>User Manual</h3>
+            <p>Learn the recommended workflow and how each feature should be used.</p>
+          </div>
+        </Link>
+
         <button
           type="button"
           className="setup-card"
