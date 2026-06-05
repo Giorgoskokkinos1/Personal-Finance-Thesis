@@ -361,6 +361,14 @@ The Setup area includes tools that support testing and final presentation:
 
 These tools allow the evaluator to see the system working with realistic data without needing to manually create a full dataset before every demonstration.
 
+### Demonstration Data Preparation
+
+For the viva demonstration, the application includes a demo data preparation flow. The demo data creates realistic sample records so that the main features can be shown immediately without manually entering every transaction during the presentation.
+
+The demonstration dataset includes sample income, expenses, categories, financial goals, transfers, withdrawals, and monthly budget records. This allows the dashboard, budget status, financial goal progress, CSV functionality, and insight charts to display meaningful results during a live demonstration.
+
+The demonstration data is not real personal financial data. It is included only for testing and presentation purposes. The Setup area also includes a reset workspace option, which allows the signed-in workspace to be cleared and returned to an empty state when required.
+
 ---
 
 ## Project Structure
