@@ -42,6 +42,7 @@ function isWithinDateRange(
   return true;
 }
 
+// Expense-only aggregation used by the horizontal category spending chart.
 export function buildCategorySpending(
   transactions: CategorySpendingTransaction[],
   range: CategorySpendingDateRange = {}

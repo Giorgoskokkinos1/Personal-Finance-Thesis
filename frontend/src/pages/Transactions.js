@@ -64,6 +64,7 @@ function TransactionsPage({
 
   const updateFilter = (nextFilter) => {
     setFilter(nextFilter);
+    // Filter changes can shrink the result set, so return to the first page.
     setCurrentPage(1);
   };
 
@@ -188,6 +189,7 @@ function TransactionsPage({
       return;
     }
 
+    // Semicolon delimiter matches the app import flow and common European CSV exports.
     const delimiter = ";";
     const headers = ["date", "type", "category", "amount", "description"];
     const numberFormatter = new Intl.NumberFormat(undefined, {

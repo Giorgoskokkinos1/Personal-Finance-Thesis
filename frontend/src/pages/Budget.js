@@ -69,10 +69,12 @@ function BudgetPage({
       return String(transaction.date).slice(0, 7) === budget.monthKey;
     });
 
+    // Withdrawals return money to cash, so they increase monthly budget capacity.
     const positiveAmount = monthTransactions
       .filter((transaction) => ["INCOME", "WITHDRAW"].includes(transaction.type))
       .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
 
+    // Transfers behave like budget usage because the money leaves day-to-day cash.
     const negativeAmount = monthTransactions
       .filter((transaction) => ["EXPENSE", "TRANSFER"].includes(transaction.type))
       .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
@@ -152,6 +154,7 @@ function BudgetPage({
       .map(([, amount]) => amount);
   }, [transactions, currentMonthKey]);
 
+  // Suggestion uses recent spending plus a small buffer, then rounds to a clean amount.
   const suggestedBudgetAmount = useMemo(() => {
     if (lastThreeExpenseMonths.length === 0) {
       return Number(budgetSettings.defaultAmount || previousBudget?.amount || 0);

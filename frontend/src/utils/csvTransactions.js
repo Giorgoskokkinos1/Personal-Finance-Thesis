@@ -1,5 +1,6 @@
 const TRANSACTION_TYPES = ["INCOME", "EXPENSE", "TRANSFER", "WITHDRAW"];
 
+// Accept common header names so exported bank/app files need less manual editing.
 const HEADER_ALIASES = {
   date: ["date", "transactiondate", "transaction_date", "day"],
   type: ["type", "transactiontype", "transaction_type"],
@@ -43,6 +44,7 @@ export const parseCsvAmount = (value) => {
     .replace(/^-/, "")
     .replace(/,/g, ",");
 
+  // Use the last separator as the decimal mark to support both 1,234.56 and 1.234,56.
   const lastComma = clean.lastIndexOf(",");
   const lastDot = clean.lastIndexOf(".");
 
@@ -116,6 +118,7 @@ export const buildCsvTransactions = ({ rows, categories = [], targets = [] }) =>
       ).toLowerCase()}`
     )
   );
+  // Transfers and withdrawals can only point to active goals.
   const activeTargets = targets.filter((target) => target.status !== "DISABLED");
   const targetByName = buildLookup(activeTargets, (target) => target.name);
   const targetById = new Map(activeTargets.map((target) => [String(target.id), target]));
@@ -168,6 +171,7 @@ export const buildCsvTransactions = ({ rows, categories = [], targets = [] }) =>
     }
 
     if (type === "TRANSFER" || type === "WITHDRAW") {
+      // The CSV may reference the goal by id, target column, or category column.
       const csvTargetId = normalizeText(getByAlias(row, "targetId"));
       const targetName = normalizeText(getByAlias(row, "target")) || category;
       const target = csvTargetId

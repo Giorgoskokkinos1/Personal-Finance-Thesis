@@ -68,6 +68,7 @@ export function getHeatmapCategories(
   ).sort((a, b) => a.localeCompare(b));
 }
 
+// Builds every day in the selected range so zero-spending days still appear.
 export function buildSpendingHeatmap(
   transactions: SpendingHeatmapTransaction[],
   scope: SpendingHeatmapScope

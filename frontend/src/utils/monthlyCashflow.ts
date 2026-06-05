@@ -38,6 +38,7 @@ export function getAvailableCashflowYears(
   ).sort((a, b) => b - a);
 }
 
+// Groups income and expenses by month for the grouped cashflow bar chart.
 export function buildMonthlyCashflow(
   transactions: Transaction[],
   year?: number
@@ -73,6 +74,7 @@ export function buildMonthlyCashflow(
       current.totalExpenses += transaction.amount;
     }
 
+    // Savings rate is only meaningful when the month has income.
     current.savingsRate =
       current.totalIncome > 0
         ? ((current.totalIncome - current.totalExpenses) /

@@ -1,3 +1,4 @@
+// Rule hints map everyday descriptions to the user's own category names.
 const CATEGORY_RULES = [
   {
     categoryHints: ["food", "restaurant", "dining", "groceries", "meal"],
@@ -101,6 +102,7 @@ const getLearnedMap = () => {
 };
 
 const getMemoryKey = (type, description) => {
+  // Short keys make learned choices reusable without storing full notes.
   const words = normalize(description).split(" ").filter(Boolean).slice(0, 4);
   return `${type}:${words.join(" ")}`;
 };
@@ -179,6 +181,7 @@ export const suggestTransactionCategory = ({ type, description, categories }) =>
     };
   }
 
+  // Learned choices require review because users can accidentally teach a bad match.
   const learnedCategory = getLearnedMap()[getMemoryKey(type, description)];
   if (
     learnedCategory &&

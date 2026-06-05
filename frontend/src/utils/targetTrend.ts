@@ -35,6 +35,7 @@ export function getAvailableTargetTrendYears(
   ).sort((a, b) => b - a);
 }
 
+// Monthly gains show movement for the month; cumulative gains show progress over time.
 export function buildTargetTrend(
   transactions: TargetTrendTransaction[],
   targetId?: string,
@@ -64,6 +65,7 @@ export function buildTargetTrend(
         monthlyGains: 0,
       } satisfies Omit<TargetTrendPoint, "cumulativeGains">);
 
+    // Transfers add to the goal; withdrawals reverse that progress.
     current.monthlyGains +=
       transaction.type === "transfer" ? transaction.amount : -transaction.amount;
 

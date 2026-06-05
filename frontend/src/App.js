@@ -100,9 +100,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authToken, setAuthToken] = useState("");
 
-  // -----------------------------------
-  // Load transactions on startup
-  // -----------------------------------
+  // Centralized headers keep every API request scoped to the signed-in workspace.
   const setAxiosUserHeader = (email, token = "") => {
     if (!axios.defaults) axios.defaults = {};
     if (!axios.defaults.headers) axios.defaults.headers = {};
@@ -131,6 +129,7 @@ function App() {
       fetchCategories(),
       fetchBudgets(),
     ]).finally(() => {
+      // Claim old local demo rows once, then rely only on authenticated ownership.
       window.localStorage.setItem("financeTrackerLegacyClaimed", "true");
       delete axios.defaults.headers.common["X-Claim-Legacy"];
     });
@@ -171,6 +170,7 @@ function App() {
     setCurrentUser(user);
   };
 
+  // Clear visible finance data before switching accounts so records never flash between users.
   const clearWorkspaceData = () => {
     setTransactions([]);
     setTargets([]);
@@ -322,14 +322,12 @@ function App() {
       return refreshWorkspaceData();
     });
 
-  // -----------------------------------
-  // Add transaction (single or recurring)
-  // -----------------------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewTransaction((prev) => {
       if (name === "type") {
         const isTargetType = value === "TRANSFER" || value === "WITHDRAW";
+        // Transfers and withdrawals use a target instead of an income/expense category.
         const suggestion = suggestTransactionCategory({
           type: value,
           description: prev.description,
@@ -383,7 +381,7 @@ function App() {
 
     const repeatMonths = parseInt(newTransaction.repeatMonths || "0", 10);
 
-    // Helper to add months to a yyyy-mm-dd date string
+    // Build recurring rows from the original local date instead of asking the user repeatedly.
     const addMonthsToDate = (dateString, monthsToAdd) => {
       const d = new Date(dateString);
       if (Number.isNaN(d.getTime())) {
@@ -393,7 +391,6 @@ function App() {
       return d.toISOString().slice(0, 10); // yyyy-mm-dd
     };
 
-    // Reset function to keep things tidy
     const resetForm = () => {
       setNewTransaction({
         date: "",
@@ -408,7 +405,6 @@ function App() {
       });
     };
 
-    // Case 1: no repeat -> single POST
     if (!repeatMonths || repeatMonths <= 0) {
       const payload = {
         date: newTransaction.date,
@@ -435,7 +431,7 @@ function App() {
       return;
     }
 
-    // Case 2: repeat monthly -> build an array and use /bulk
+    // Recurring transactions use the same bulk endpoint as CSV import.
     const baseDate = newTransaction.date;
     const rows = [];
 
@@ -537,9 +533,7 @@ function App() {
     return matchMonth && matchType && matchCategory && matchSearch;
   });
 
-  // -----------------------------------
-  // Summary values (for filtered list)
-  // -----------------------------------
+  // Filtered summary mirrors the cash rule: income/withdrawals in, expenses/transfers out.
   const totalIncome = filteredTransactions
     .filter((t) => t.type === "INCOME")
     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
@@ -605,6 +599,7 @@ function App() {
       return String(t.date).slice(0, 7) === currentMonthKey;
     })
     .reduce((sum, t) => {
+      // Budget capacity rises with income/withdrawals and falls with expenses/transfers.
       const amount = Number(t.amount || 0);
       if (t.type === "INCOME" || t.type === "WITHDRAW") return sum + amount;
       if (t.type === "EXPENSE" || t.type === "TRANSFER") return sum - amount;

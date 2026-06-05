@@ -4,7 +4,6 @@ const express = require("express");
 const cors = require("cors");
 const crypto = require("crypto");
 
-// db.js is in the same folder (api/src/db.js)
 const db = require("./db");
 
 const app = express();
@@ -18,6 +17,7 @@ app.use(express.json());
 const CATEGORY_TYPES = ["INCOME", "EXPENSE"];
 const TRANSACTION_TYPES = ["INCOME", "EXPENSE", "TRANSFER", "WITHDRAW"];
 const TARGET_TYPES = ["SAVINGS", "TRAVEL", "INVESTMENT", "OTHER"];
+// PBKDF2 keeps stored passwords away from plain text while staying dependency-free.
 const PASSWORD_ITERATIONS = 120000;
 const SESSION_TTL_DAYS = 7;
 const COMMON_PASSWORDS = new Set([
@@ -58,6 +58,7 @@ const verifyPassword = (password, salt, expectedHash) => {
     return false;
   }
 
+  // Constant-time comparison avoids leaking which part of the hash matched.
   return crypto.timingSafeEqual(
     Buffer.from(passwordHash, "hex"),
     Buffer.from(String(expectedHash), "hex")
@@ -79,6 +80,7 @@ const normalizeCategoryType = (type) => String(type || "").trim().toUpperCase();
 
 const normalizeCategoryName = (name) => String(name || "").trim();
 
+// owner_email keeps the finance tables easy to query while auth decides who owns the request.
 const getOwnerEmail = (req) =>
   req.authUser?.email || normalizeEmail(req.get("x-user-email") || "demo@local");
 
@@ -96,6 +98,7 @@ const getAuthenticatedUserFromRequest = async (req) => {
     return null;
   }
 
+  // Only the token hash is stored, so a leaked sessions table is less useful.
   const [rows] = await db.query(
     `
       SELECT u.id, u.name, u.email
@@ -154,6 +157,7 @@ const addOwnerColumn = async (tableName) => {
   }
 };
 
+// Lightweight migrations let older thesis/demo databases run with the final schema.
 const ensureAccountScoping = async () => {
   await addOwnerColumn("transactions");
   await addOwnerColumn("categories");
@@ -227,6 +231,7 @@ const ensureUserSessionsTable = async () => {
   `);
 };
 
+// First signed-in user can claim old local rows created before authentication existed.
 const claimUnownedData = async (ownerEmail) => {
   if (!ownerEmail || ownerEmail === "demo@local") return;
 
@@ -362,6 +367,7 @@ const migrateCategoriesFromTransactions = async () => {
   }
 };
 
+// Keeps old transaction category text aligned with the managed category casing.
 const syncTransactionsToManagedCategories = async () => {
   const [rows] = await db.query("SELECT type, name FROM categories");
 
@@ -521,6 +527,7 @@ app.put("/api/auth/profile", requireAuthenticatedUser, async (req, res) => {
   }
 });
 
+// Everything below this point is workspace data and must belong to a signed-in user.
 app.use("/api", async (req, res, next) => {
   try {
     if (!req.authUser) {
@@ -736,6 +743,7 @@ app.get("/api/targets", async (req, res) => {
   }
 });
 
+// Targets are funded through TRANSFER and reduced through WITHDRAW transactions.
 app.post("/api/targets", async (req, res) => {
   const ownerEmail = getOwnerEmail(req);
   const type = String(req.body.type || "").trim().toUpperCase();
@@ -1096,6 +1104,7 @@ const clearWorkspaceForOwner = async (connection, ownerEmail) => {
   ]);
 };
 
+// Reset removes only the current user workspace, not shared account records.
 app.delete("/api/workspace", async (req, res) => {
   const ownerEmail = getOwnerEmail(req);
   const connection = await db.getConnection();
@@ -1269,6 +1278,7 @@ app.get("/api/transactions/:id", async (req, res) => {
 });
 
 // Create a single transaction
+// One transaction can affect cash balance, budget status, and target progress.
 app.post("/api/transactions", async (req, res) => {
   const ownerEmail = getOwnerEmail(req);
   const { date, category, amount, description } = req.body;
@@ -1342,6 +1352,7 @@ app.post("/api/transactions", async (req, res) => {
 });
 
 // Bulk insert (CSV upload + recurring subscriptions)
+// CSV import and recurring entries share the same validation path through bulk insert.
 app.post("/api/transactions/bulk", async (req, res) => {
   const ownerEmail = getOwnerEmail(req);
   try {
